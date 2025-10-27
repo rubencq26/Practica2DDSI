@@ -21,7 +21,7 @@ import org.hibernate.query.Query;
  *
  * @author Ruben
  */
-public class practica0 {
+public class practica2 {
 
     /**
      * @param args the command line arguments
@@ -34,7 +34,7 @@ public class practica0 {
         if (sesionFactory == null) {
             return;
         }
-        actividadesMonitorResponsableDni("26130141W");
+        listarSociosSQL();
         
 
     }

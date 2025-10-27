@@ -27,4 +27,5 @@
             <version>3.5.5</version>
         </dependency>
     </dependencies>
+    <name>practica2</name>
 </project>
