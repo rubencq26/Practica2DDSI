@@ -20,4 +20,6 @@ public class VistaMensajes {
         System.out.println("Error: " + text);
     }
     
+    
+    
 }

@@ -21,4 +21,31 @@ public class VistaMenu {
         System.out.println("4. Salir");
     }
     
+    public void menuSocio(){
+        System.out.println("*******");
+        System.out.println("Socios");
+        System.out.println("*******");
+        System.out.println("");
+        System.out.println("1. Alta de un Socio");
+        System.out.println("2. Salir");
+    }
+    
+    public void menuMonitor(){
+        System.out.println("**********");
+        System.out.println("Monitores");
+        System.out.println("**********");
+        System.out.println("");
+        System.out.println("1. Actividades de un monitor");
+        System.out.println("2. Salir");
+    }
+    
+    public void menuActividades(){
+        System.out.println("***********");
+        System.out.println("Actividades");
+        System.out.println("***********");
+        System.out.println("");
+        System.out.println("1. Inscripciones");
+        System.out.println("2. Salir");   
+    }
+    
 }

@@ -5,6 +5,9 @@
 package Controlador;
 
 import Modelo.Socio;
+import Vista.VistaMensajes;
+import Vista.VistaMenu;
+import Vista.VistaSocio;
 import java.util.Scanner;
 import org.hibernate.HibernateError;
 import org.hibernate.HibernateException;
@@ -21,10 +24,14 @@ public class ControladorSocio {
 
     private final SessionFactory sessionFactory;
     private SocioDAO socioDAO = null;
+    private VistaSocio vista;
+    private VistaMensajes vMensajes;
 
     public ControladorSocio(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
         socioDAO = new SocioDAO();
+        vista = new VistaSocio();
+        vMensajes = new VistaMensajes();
     }
 
     public void altaSocio() {
@@ -45,39 +52,39 @@ public class ControladorSocio {
             Character categoria;
 
             Scanner sc = new Scanner(System.in);
-            System.out.println("Introduzca el numero de socio(SXXX): ");
+            vista.pedirDato("Introduzca el numero de socio(SXXX): ");
             numSocio = sc.next();
             Socio s = session.find(Socio.class, numSocio);
             if (s != null) {
-                System.out.println("Error: el numSocio ya existe: ");
+                vMensajes.errorConsola("Error: el numSocio ya existe: ");
                 return;
             }
 
             sc.nextLine();
 
-            System.out.println("Introduce el nombre y apellido del socio");
+            vista.pedirDato("Introduce el nombre y apellido del socio: ");
             nombre = sc.nextLine();
-            System.out.println("Introduzca el dni del socio: ");
+            vista.pedirDato("Introduzca el dni del socio: ");
             dni = sc.next();
             try {
                 Query query = session.createNativeQuery("SELECT * FROM SOCIO s WHERE s.dni = :dniP", Socio.class);
                 query.setParameter("dniP", dni);
 
                 s = (Socio) query.getSingleResult();
-                System.out.println("Error el dni ya existe");
+                vMensajes.errorConsola("El dni ya existe");
                 return;
 
             } catch (Exception e) {
             }
-            System.out.println("Introduzca la fecha de nacimiento(dd/mm/yyyy): ");
+            vista.pedirDato("Introduzca la fecha de nacimiento(dd/mm/yyyy): ");
             fNac = sc.next();
-            System.out.println("Introduzca el telefono: ");
+            vista.pedirDato("Introduzca el telefono: ");
             tel = sc.next();
-            System.out.println("Introduzca el correo: ");
+            vista.pedirDato("Introduzca el correo: ");
             correo = sc.next();
-            System.out.println("Introduzca la fecha de entrada(dd/mm/yyyy): ");
+            vista.pedirDato("Introduzca la fecha de entrada(dd/mm/yyyy): ");
             fEntrada = sc.next();
-            System.out.println("Introduzca la categoria: ");
+            vista.pedirDato("Introduzca la categoria: ");
             categoria = sc.next().charAt(0);
             
             Socio socio = new Socio(numSocio, nombre, dni, fNac, tel, correo, fEntrada, categoria);
@@ -94,6 +101,17 @@ public class ControladorSocio {
             if(session != null && session.isOpen()){
                 session.close();
             }
+        }
+    }
+    
+    public void menuSocio(){
+        vista.menuSocio();
+        int opc;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Introduce la opcion: ");
+        opc = sc.nextInt();
+        if(opc == 1){
+            altaSocio();
         }
     }
 
