@@ -4,8 +4,11 @@
  */
 package Controlador;
 
+import Modelo.MonitorDAO;
 import Modelo.Actividad;
 import Modelo.Socio;
+import Vista.VistaMensajes;
+import Vista.VistaMenu;
 import java.util.List;
 import java.util.Scanner;
 import org.hibernate.Session;
@@ -20,10 +23,13 @@ import org.hibernate.query.Query;
 public class ControladorMonitor {
     public final SessionFactory sessionFactory;
     public MonitorDAO monitorDAO = null;
+    public final Vista.VistaMensajes vMensaje;
     
     public ControladorMonitor(SessionFactory sessionFactory){
         this.sessionFactory = sessionFactory;
         monitorDAO = new MonitorDAO();
+        vMensaje = new VistaMensajes();
+        menuMonitor();
     }
     
      public void actividadesMonitorResponsableDni(String dni){
@@ -33,14 +39,13 @@ public class ControladorMonitor {
         try{
             tr = sesion.beginTransaction();
             try {
-                Query consulta = sesion.createNativeQuery("SELECT m.codMonitor FROM MONITOR m WHERE m.dni = :dniP", Object.class);
-                consulta.setParameter("dniP", dni);
-                String codMonitor = (String) consulta.getSingleResult();
                 
-                consulta = sesion.createNativeQuery("SELECT * FROM ACTIVIDAD a WHERE a.monitorResponsable = :codMon", Actividad.class);
-                consulta.setParameter("codMon", codMonitor);
-                List<Actividad> actividades = consulta.getResultList();
+                String codMonitor = MonitorDAO.codMonitorDni(sesion, dni);
                 
+                
+                List<Actividad> actividades = MonitorDAO.getActividadesMonitor(sesion, codMonitor);
+                
+                vMensaje.mensajeConsola("Las actividades responsables del monitor " + dni + " son: ");
                 for(Actividad a : actividades){
                     System.out.println(a.toString());
                 }
@@ -69,7 +74,20 @@ public class ControladorMonitor {
         System.out.println("Introduce el dni del monitor");
         String dni = sc.next();
         actividadesMonitorResponsableDni(dni);
+
         
+    }
+    
+    public void menuMonitor(){
+        VistaMenu.menuMonitor();
+        int opc;
+        Scanner sc = new Scanner(System.in);
+        VistaMensajes.pedirDato("Introduzca una opcion: ");
+        opc = sc.nextInt();
+        if(opc == 1){
+            actividadesMonitorResponsableDni();
+        }
+       
     }
     
 }

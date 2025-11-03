@@ -10,7 +10,7 @@ package Vista;
  */
 public class VistaMenu {
     
-    public void menuPrincipalConsola(){
+    public static void menuPrincipalConsola(){
         System.out.println("********************");
         System.out.println("Gestión del gimnasio");
         System.out.println("********************");
@@ -21,7 +21,7 @@ public class VistaMenu {
         System.out.println("4. Salir");
     }
     
-    public void menuSocio(){
+    public static void menuSocio(){
         System.out.println("*******");
         System.out.println("Socios");
         System.out.println("*******");
@@ -30,7 +30,7 @@ public class VistaMenu {
         System.out.println("2. Salir");
     }
     
-    public void menuMonitor(){
+    public static void menuMonitor(){
         System.out.println("**********");
         System.out.println("Monitores");
         System.out.println("**********");
@@ -39,7 +39,7 @@ public class VistaMenu {
         System.out.println("2. Salir");
     }
     
-    public void menuActividades(){
+    public static void menuActividades(){
         System.out.println("***********");
         System.out.println("Actividades");
         System.out.println("***********");
