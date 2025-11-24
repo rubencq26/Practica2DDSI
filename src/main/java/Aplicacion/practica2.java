@@ -4,6 +4,8 @@
  */
 package Aplicacion;
 
+import Vista.VistaConexion;
+
 
 
 /**
@@ -17,7 +19,7 @@ public class practica2 {
      */
     public static void main(String[] args) {
         new Controlador.ControladorConexion();
-
+        
     }
 
 }
