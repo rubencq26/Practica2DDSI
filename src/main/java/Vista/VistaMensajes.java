@@ -7,6 +7,7 @@ package Vista;
 import Modelo.Socio;
 import java.util.List;
 import java.util.Set;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -14,14 +15,18 @@ import java.util.Set;
  */
 public class VistaMensajes {
     
+    
+    
+    
+    
     public static void mensajeConsola(String texto){
          System.out.println("***************************************");
          System.out.println(texto);
          System.out.println("***************************************");
     }
     
-    public static void errorConsola(String text){
-        System.out.println("Error: " + text);
+    public static void error(String text, VistaPrincipal vp){
+         JOptionPane.showMessageDialog(vp, text, null, JOptionPane.ERROR_MESSAGE);
     }
     
     public static void pedirDato(String texto){
@@ -33,6 +38,8 @@ public class VistaMensajes {
             System.out.println(s.toString());
         }
     }
+    
+    
     
     
     

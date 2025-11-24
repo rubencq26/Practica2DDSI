@@ -4,24 +4,30 @@
  */
 package Controlador;
 
+import Modelo.Monitor;
+import Modelo.MonitorDAO;
+import Utilidades.GestionTablas;
 import Vista.ActividadesPanel;
 import Vista.InicioPanel;
 import Vista.MonitorPanel;
 import Vista.SocioPanel;
+import Vista.VistaMensajes;
 import Vista.VistaPrincipal;
 import config.HibernateUtil;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Scanner;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 /**
  *
  * @author rubco
  */
-public class ControladorPrincipal implements ActionListener{
+public class ControladorPrincipal implements ActionListener {
 
     private final SessionFactory sessionFactory;
     private final VistaPrincipal vPrincipal;
@@ -29,7 +35,7 @@ public class ControladorPrincipal implements ActionListener{
     private final SocioPanel vSocio;
     private final ActividadesPanel vActividad;
     private final MonitorPanel vMonitor;
-    
+
     public ControladorPrincipal(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
         vPrincipal = new VistaPrincipal();
@@ -38,31 +44,33 @@ public class ControladorPrincipal implements ActionListener{
         vActividad = new ActividadesPanel();
         vMonitor = new MonitorPanel();
         addListeners();
-        
+
         vPrincipal.getContentPane().setLayout(new CardLayout());
         vPrincipal.add(vInicio);
         vPrincipal.add(vSocio);
         vPrincipal.add(vActividad);
         vPrincipal.add(vMonitor);
-        
+
         vInicio.setVisible(true);
         vSocio.setVisible(false);
         vActividad.setVisible(false);
         vMonitor.setVisible(false);
         
-        
+        GestionTablas.inicializarTablaMonitor(vMonitor);
+        dibujaRellenaTablaMonitores();
+
     }
-    
-    private void addListeners(){
+
+    private void addListeners() {
         vPrincipal.inicioMenu.addActionListener(this);
         vPrincipal.monitorMenu.addActionListener(this);
         vPrincipal.socioMenu.addActionListener(this);
         vPrincipal.actividadMenu.addActionListener(this);
         vPrincipal.salirMenu.addActionListener(this);
     }
-    
+
     @Override
-    public void actionPerformed(ActionEvent e){
+    public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "InicioMenu":
                 muestraPanel("Inicio");
@@ -82,14 +90,13 @@ public class ControladorPrincipal implements ActionListener{
                 throw new AssertionError();
         }
     }
-    
-    
-    private void muestraPanel(String panel){
+
+    private void muestraPanel(String panel) {
         vInicio.setVisible(false);
         vMonitor.setVisible(false);
         vSocio.setVisible(false);
         vActividad.setVisible(false);
-        
+
         switch (panel) {
             case "Inicio":
                 vInicio.setVisible(true);
@@ -105,8 +112,30 @@ public class ControladorPrincipal implements ActionListener{
                 break;
         }
     }
-    
-    
 
-    
+    private void dibujaRellenaTablaMonitores() {
+        try {
+            GestionTablas.dibujarTablaMonitores(vMonitor);
+            Session session = sessionFactory.openSession();
+            Transaction tr = session.beginTransaction();
+            try {
+                List<Monitor> lMonitores = MonitorDAO.listarMonitores(session);
+                GestionTablas.vaciarTablaMonitores();
+                GestionTablas.rellenarTablaMonitores(lMonitores);
+                tr.commit();
+                
+            } catch (Exception e) {
+                tr.rollback();
+                VistaMensajes.error(e.getMessage(), vPrincipal);
+            }finally{
+                if(session != null && session.isOpen()){
+                    session.close();
+                }
+            }
+            
+        } catch (Exception e) {
+            VistaMensajes.error(e.getMessage(), vPrincipal);
+        }
+    }
+
 }

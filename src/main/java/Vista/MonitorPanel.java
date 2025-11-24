@@ -7,6 +7,7 @@ package Vista;
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 /**
@@ -14,25 +15,28 @@ import javax.swing.JTable;
  * @author rubco
  */
 public class MonitorPanel extends javax.swing.JPanel {
-    
-    
 
     /**
      * Creates new form MonitorPanel
      */
     public MonitorPanel() {
         initComponents();
-        
+
         JLabel titulo = new JLabel("Gestion de Monitores");
         titulo.setBounds(30, 30, 300, 30);
         titulo.setFont(new Font("Segoe UI", Font.PLAIN, 24));
         add(titulo);
-        
+
         tablaMonitor = new JTable();
-        tablaMonitor.setBounds(WIDTH, WIDTH, WIDTH, HEIGHT);
-      
+
+        JScrollPane scrollPane = new JScrollPane(tablaMonitor);
+        scrollPane.setBounds(30, 70, 1440, 300);
+        add(scrollPane);
+
+        
+
     }
-    
+
     public JTable tablaMonitor;
 
     /**

@@ -25,4 +25,10 @@ public class MonitorDAO {
         consulta.setParameter("codMon", codMon);
         return consulta.getResultList();
     }
+    
+    public static List<Monitor> listarMonitores(Session session){
+        Query consulta = session.createNativeQuery("SELECT * FROM MONITOR m", Monitor.class);
+        System.out.println("Monitores encontrados");
+        return consulta.getResultList();
+    }
 }

@@ -6,6 +6,7 @@ package Utilidades;
 
 import Modelo.Monitor;
 import Vista.MonitorPanel;
+import java.awt.Dimension;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -66,10 +67,12 @@ public class GestionTablas {
             fila[6] = monitor.getNick();
             modeloTablaMonitores.addRow(fila);
         }
+        System.out.println("Tabla rellenada");
     }
     
     public static void vaciarTablaMonitores(){
         modeloTablaMonitores.setRowCount(0);
+        System.out.println("Tabla vaciada");
     }
     
 }

@@ -4,13 +4,7 @@
  */
 package Controlador;
 
-import Modelo.Actividad;
-import Modelo.ActividadDAO;
-import Modelo.Socio;
-import java.util.Scanner;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+
 
 /**
  *
@@ -18,15 +12,15 @@ import org.hibernate.Transaction;
  */
 public class ControladorActividad {
 
-    private final SessionFactory sessionFactory;
+    /*private final SessionFactory sessionFactory;
     private ActividadDAO actividadDAO = null;
 
-    public ControladorActividad(SessionFactory sessionFactory) {
+    /*public ControladorActividad(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
         menuActividad();
     }
 
-    public void getInscripciones(String codActividad) {
+   /* public void getInscripciones(String codActividad) {
         Session session = null;
         Transaction tr = null;
 
@@ -75,6 +69,6 @@ public class ControladorActividad {
             getInscripciones();
         }
       
-    }
+    }*/
 
 }

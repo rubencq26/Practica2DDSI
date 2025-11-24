@@ -22,9 +22,9 @@ import org.hibernate.query.Query;
  * @author rubco
  */
 public class ControladorSocio {
-
+/*
     private final SessionFactory sessionFactory;
-   
+    
 
     private VistaMensajes vMensajes;
 
@@ -33,7 +33,7 @@ public class ControladorSocio {
         menuSocio();
     }
 
-    public void altaSocio() {
+   public void altaSocio() {
         Session session = null;
         Transaction tr = null;
 
@@ -111,5 +111,5 @@ public class ControladorSocio {
         }
         
     }
-
+*/
 }
