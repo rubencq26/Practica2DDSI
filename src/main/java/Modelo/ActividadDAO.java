@@ -4,7 +4,9 @@
  */
 package Modelo;
 
+import java.util.List;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 /**
  *
@@ -14,6 +16,12 @@ public class ActividadDAO {
     
     public static Actividad buscarId(Session session, String idAct){
         return session.find(Actividad.class, idAct);
+    }
+    
+    public static List<Object[]> listarActividades(Session session){
+        Query consulta = session.createNativeQuery("SELECT a.idActividad, a.nombre, a.dia, a.hora, a.descripcion, a.precioBaseMes, m.nombre FROM ACTIVIDAD a INNER JOIN MONITOR m WHERE m.codMonitor = a.monitorResponsable", Object.class);
+        System.out.println("Actividades encontrados");
+        return consulta.getResultList();
     }
     
 }

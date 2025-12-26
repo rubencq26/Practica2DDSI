@@ -31,4 +31,10 @@ public class MonitorDAO {
         System.out.println("Monitores encontrados");
         return consulta.getResultList();
     }
+    
+    public static String getMonitorNombre(Session session, String codMon){
+        Query consulta = session.createNativeQuery("SELECT m.nombre FROM MONITOR m WHERE m.codMonitor = :codMon", String.class);
+        consulta.setParameter("codMon", codMon);
+        return (String) consulta.getSingleResult();
+    }
 }

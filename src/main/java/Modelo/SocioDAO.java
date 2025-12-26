@@ -4,6 +4,7 @@
  */
 package Modelo;
 
+import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -30,6 +31,12 @@ public class SocioDAO {
     
     public static Socio buscarId(Session session, String id){
         return session.find(Socio.class, id);
+    }
+    
+    public static List<Socio> listarSocios(Session session){
+        Query consulta = session.createNativeQuery("SELECT * FROM SOCIO s", Socio.class);
+        System.out.println("Socios encontrados");
+        return consulta.getResultList();
     }
 
 }

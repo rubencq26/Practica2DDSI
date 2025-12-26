@@ -4,8 +4,12 @@
  */
 package Controlador;
 
+import Modelo.Actividad;
+import Modelo.ActividadDAO;
 import Modelo.Monitor;
 import Modelo.MonitorDAO;
+import Modelo.Socio;
+import Modelo.SocioDAO;
 import Utilidades.GestionTablas;
 import Vista.ActividadesPanel;
 import Vista.InicioPanel;
@@ -58,6 +62,12 @@ public class ControladorPrincipal implements ActionListener {
         
         GestionTablas.inicializarTablaMonitor(vMonitor);
         dibujaRellenaTablaMonitores();
+        
+        GestionTablas.inicializarTablaSocio(vSocio);
+        dibujaRellenaTablaSocios();
+        
+        GestionTablas.inicializarTablaActividad(vActividad);
+        dibujaRellenaTablaActividad();
 
     }
 
@@ -122,6 +132,57 @@ public class ControladorPrincipal implements ActionListener {
                 List<Monitor> lMonitores = MonitorDAO.listarMonitores(session);
                 GestionTablas.vaciarTablaMonitores();
                 GestionTablas.rellenarTablaMonitores(lMonitores);
+                tr.commit();
+                
+            } catch (Exception e) {
+                tr.rollback();
+                VistaMensajes.error(e.getMessage(), vPrincipal);
+            }finally{
+                if(session != null && session.isOpen()){
+                    session.close();
+                }
+            }
+            
+        } catch (Exception e) {
+            VistaMensajes.error(e.getMessage(), vPrincipal);
+        }
+    }
+    
+    private void dibujaRellenaTablaSocios() {
+        try {
+            GestionTablas.dibujarTablaSocio(vSocio);
+            Session session = sessionFactory.openSession();
+            Transaction tr = session.beginTransaction();
+            try {
+                List<Socio> lSocios = SocioDAO.listarSocios(session);
+                GestionTablas.vaciarTablaSocio();
+                GestionTablas.rellenarTablaSocio(lSocios);
+                tr.commit();
+                
+            } catch (Exception e) {
+                tr.rollback();
+                VistaMensajes.error(e.getMessage(), vPrincipal);
+            }finally{
+                if(session != null && session.isOpen()){
+                    session.close();
+                }
+            }
+            
+        } catch (Exception e) {
+            VistaMensajes.error(e.getMessage(), vPrincipal);
+        }
+    }
+    
+    
+    private void dibujaRellenaTablaActividad() {
+        try {
+            GestionTablas.dibujarTablaActividad(vActividad);
+            Session session = sessionFactory.openSession();
+            Transaction tr = session.beginTransaction();
+            try {
+                List<Object[]> lActividad = ActividadDAO.listarActividades(session);
+                GestionTablas.vaciarTablaActividad();
+                GestionTablas.rellenarTablaActividad(lActividad);
                 tr.commit();
                 
             } catch (Exception e) {

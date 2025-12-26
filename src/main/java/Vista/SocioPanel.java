@@ -6,12 +6,16 @@ package Vista;
 
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /**
  *
  * @author rubco
  */
 public class SocioPanel extends javax.swing.JPanel {
+    
+    public JTable tablaSocio;
 
     /**
      * Creates new form SocioPanel
@@ -22,6 +26,14 @@ public class SocioPanel extends javax.swing.JPanel {
         titulo.setBounds(30, 30, 300, 30);
         titulo.setFont(new Font("Segoe UI", Font.PLAIN, 24));
         add(titulo);
+        
+        tablaSocio = new JTable();
+        
+        JScrollPane scrollPane = new JScrollPane(tablaSocio);
+        scrollPane.setBounds(30, 70, 1440, 300);
+        
+        scrollPane.getViewport().setBorder(null);
+        add(scrollPane);
     }
 
     /**
