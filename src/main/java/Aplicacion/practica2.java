@@ -4,8 +4,6 @@
  */
 package Aplicacion;
 
-import Vista.VistaConexion;
-
 
 
 /**

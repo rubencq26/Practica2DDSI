@@ -4,6 +4,17 @@
  */
 package Controlador;
 
+import Modelo.ActividadDAO;
+import Utilidades.GestionTablas;
+import Vista.ActividadesPanel;
+import Vista.MonitorPanel;
+import Vista.VistaMensajes;
+import Vista.VistaPrincipal;
+import java.util.List;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
 
 
 /**
@@ -11,64 +22,50 @@ package Controlador;
  * @author rubco
  */
 public class ControladorActividad {
-
-    /*private final SessionFactory sessionFactory;
-    private ActividadDAO actividadDAO = null;
-
-    /*public ControladorActividad(SessionFactory sessionFactory) {
+    private final ActividadesPanel vActividad;
+    private final SessionFactory sessionFactory;
+    private final VistaPrincipal vPrincipal;
+    
+    public ControladorActividad(SessionFactory sessionFactory, VistaPrincipal vPrincipal){
         this.sessionFactory = sessionFactory;
-        menuActividad();
+        vActividad = new ActividadesPanel();
+        this.vPrincipal = vPrincipal;
+        
+        vPrincipal.add(vActividad);
+        vActividad.setVisible(false);
+        
+        GestionTablas.inicializarTablaActividad(vActividad);
+        dibujaRellenaTablaActividad();
+        
     }
-
-   /* public void getInscripciones(String codActividad) {
-        Session session = null;
-        Transaction tr = null;
-
+    
+    private void dibujaRellenaTablaActividad() {
         try {
-            session = sessionFactory.openSession();
-            tr = session.beginTransaction();
-
-            Actividad a = actividadDAO.buscarId(session, codActividad);
-            if (a == null) {
-                throw new Exception("Actividad no encontrada");
-            }
-            Vista.VistaMensajes.mensajeConsola("Numero de socios apuntados: " + a.getSocioSet().size());
-            Vista.VistaMensajes.mostrarListaSocios(a.getSocioSet());
-
-            tr.commit();
-
-        } catch (Exception e) {
-            Vista.VistaMensajes.errorConsola(e.getMessage());
-            if (tr != null) {
+            GestionTablas.dibujarTablaActividad(vActividad);
+            Session session = sessionFactory.openSession();
+            Transaction tr = session.beginTransaction();
+            try {
+                List<Object[]> lActividad = ActividadDAO.listarActividades(session);
+                GestionTablas.vaciarTablaActividad();
+                GestionTablas.rellenarTablaActividad(lActividad);
+                tr.commit();
+                
+            } catch (Exception e) {
                 tr.rollback();
+                VistaMensajes.error(e.getMessage(), vPrincipal);
+            }finally{
+                if(session != null && session.isOpen()){
+                    session.close();
+                }
             }
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
+            
+        } catch (Exception e) {
+            VistaMensajes.error(e.getMessage(), vPrincipal);
         }
-
     }
-
-    public void getInscripciones() {
-        Scanner sc = new Scanner(System.in);
-
-        Vista.VistaMensajes.pedirDato("Introduzca el id de la actividad a buscar: ");
-        String idAct = sc.next();
-
-        getInscripciones(idAct);
-      
+    
+    public void mostrarPanel(boolean mostrar){
+        vActividad.setVisible(mostrar);
     }
-
-    public void menuActividad() {
-        Vista.VistaMenu.menuActividades();
-        Vista.VistaMensajes.pedirDato("Introduzca una opcion: ");
-        Scanner sc = new Scanner(System.in);
-        int opc = sc.nextInt();
-        if (opc == 1) {
-            getInscripciones();
-        }
-      
-    }*/
-
+    
 }

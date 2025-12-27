@@ -4,90 +4,68 @@
  */
 package Controlador;
 
+import Modelo.Monitor;
 import Modelo.MonitorDAO;
-import Modelo.Actividad;
-import Modelo.Socio;
+import Utilidades.GestionTablas;
+import Vista.MonitorPanel;
 import Vista.VistaMensajes;
-import Vista.VistaMenu;
+import Vista.VistaPrincipal;
 import java.util.List;
-import java.util.Scanner;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+
+
 
 /**
  *
  * @author rubco
  */
 public class ControladorMonitor {
-    public final SessionFactory sessionFactory;
-    public MonitorDAO monitorDAO = null;
-    public final Vista.VistaMensajes vMensaje;
+    private final MonitorPanel vMonitor;
+    private final SessionFactory sessionFactory;
+    private final VistaPrincipal vPrincipal;
     
-    public ControladorMonitor(SessionFactory sessionFactory){
+    public ControladorMonitor(SessionFactory sessionFactory, VistaPrincipal vPrincipal){
+        vMonitor = new MonitorPanel();
         this.sessionFactory = sessionFactory;
-        monitorDAO = new MonitorDAO();
-        vMensaje = new VistaMensajes();
-        menuMonitor();
-    }
-    
-     public void actividadesMonitorResponsableDni(String dni){
-        Session sesion = sessionFactory.openSession();
-        Transaction tr = null;
+        this.vPrincipal = vPrincipal;
         
-        try{
-            tr = sesion.beginTransaction();
+        vPrincipal.add(vMonitor);
+        vMonitor.setVisible(false);
+        
+        GestionTablas.inicializarTablaMonitor(vMonitor);
+        dibujaRellenaTablaMonitores();
+    } 
+    
+    private void dibujaRellenaTablaMonitores() {
+        try {
+            GestionTablas.dibujarTablaMonitores(vMonitor);
+            Session session = sessionFactory.openSession();
+            Transaction tr = session.beginTransaction();
             try {
-                
-                String codMonitor = MonitorDAO.codMonitorDni(sesion, dni);
-                
-                
-                List<Actividad> actividades = MonitorDAO.getActividadesMonitor(sesion, codMonitor);
-                
-                vMensaje.mensajeConsola("Las actividades responsables del monitor " + dni + " son: ");
-                for(Actividad a : actividades){
-                    System.out.println(a.toString());
-                }
+                List<Monitor> lMonitores = MonitorDAO.listarMonitores(session);
+                GestionTablas.vaciarTablaMonitores();
+                GestionTablas.rellenarTablaMonitores(lMonitores);
+                tr.commit();
                 
             } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-                
-            }
-            tr.commit();
-        }catch(Exception e){
-            if(tr != null){
                 tr.rollback();
+                VistaMensajes.error(e.getMessage(), vPrincipal);
+            }finally{
+                if(session != null && session.isOpen()){
+                    session.close();
+                }
             }
             
-        }finally{
-            if(sesion != null && sesion.isOpen()){
-                sesion.close();
-            }
+        } catch (Exception e) {
+            VistaMensajes.error(e.getMessage(), vPrincipal);
         }
-        
-        
     }
     
-    public void actividadesMonitorResponsableDni(){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Introduce el dni del monitor");
-        String dni = sc.next();
-        actividadesMonitorResponsableDni(dni);
-
-        
+    public void mostrarPanel(boolean mostrar){
+        vMonitor.setVisible(mostrar);
     }
-    
-    public void menuMonitor(){
-        VistaMenu.menuMonitor();
-        int opc;
-        Scanner sc = new Scanner(System.in);
-        VistaMensajes.pedirDato("Introduzca una opcion: ");
-        opc = sc.nextInt();
-        if(opc == 1){
-            actividadesMonitorResponsableDni();
-        }
-       
-    }
-    
 }
+
+
