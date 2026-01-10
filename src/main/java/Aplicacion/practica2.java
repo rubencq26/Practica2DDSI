@@ -4,7 +4,12 @@
  */
 package Aplicacion;
 
-
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import javax.swing.UIManager;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 /**
  *
@@ -18,6 +23,11 @@ public class practica2 {
     public static void main(String[] args) {
         new Controlador.ControladorConexion();
         
+        try {
+            UIManager.setLookAndFeel(new FlatIntelliJLaf());
+        } catch (Exception ex) {
+            System.err.println("Mensaje de error");
+        }
     }
 
 }

@@ -18,8 +18,13 @@ public class SocioDAO {
 
     }
 
-    public static void insertaSocio(Session session, Socio socio) throws Exception {
-        session.persist(socio);
+    public static boolean insertarSocio(Session session, Socio socio) {
+        try {
+            session.persist(socio);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static Socio buscarSocioDni(Session session, String dni) throws Exception{
@@ -37,6 +42,36 @@ public class SocioDAO {
         Query consulta = session.createNativeQuery("SELECT * FROM SOCIO s", Socio.class);
         System.out.println("Socios encontrados");
         return consulta.getResultList();
+    }
+    
+    public static boolean eliminarSocio(Session session, Socio socio) {
+        try {
+            // Buscamos el objeto primero para asegurarnos de que existe y está gestionado
+            if (socio != null) {
+                session.remove(socio);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    
+    public static boolean actualizarSocio(Session session, Socio socio){
+        try {
+            // Buscamos el objeto primero para asegurarnos de que existe y está gestionado
+            if (socio != null) {
+                session.merge(socio);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    
     }
 
 }

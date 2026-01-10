@@ -5,6 +5,7 @@
 package Vista;
 
 import java.awt.Font;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -16,6 +17,10 @@ import javax.swing.JTable;
 public class SocioPanel extends javax.swing.JPanel {
     
     public JTable tablaSocio;
+    
+    public JButton nuevoSocio;
+    public JButton bajaSocio;
+    public JButton actualizacionSocio;
 
     /**
      * Creates new form SocioPanel
@@ -34,6 +39,24 @@ public class SocioPanel extends javax.swing.JPanel {
         
         scrollPane.getViewport().setBorder(null);
         add(scrollPane);
+        
+        
+        
+        nuevoSocio = new JButton("Nuevo Socio");
+        bajaSocio = new JButton("Baja Socio");
+        actualizacionSocio = new JButton("Actualización Socio");
+        
+        nuevoSocio.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        bajaSocio.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        actualizacionSocio.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        
+        nuevoSocio.setBounds(30, 375, 150, 30);
+        bajaSocio.setBounds(185, 375, 150, 30);
+        actualizacionSocio.setBounds(340, 375, 200, 30);
+        
+        add(nuevoSocio);
+        add(bajaSocio);
+        add(actualizacionSocio);
     }
 
     /**

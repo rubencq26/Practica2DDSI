@@ -56,6 +56,14 @@ public class Monitor implements Serializable {
     private Set<Actividad> actividadSet;
 
     public Monitor() {
+        this.codMonitor = "";
+        this.nombre = "";
+        this.dni = "";
+        this.telefono = "";
+        this.correo = "";
+        this.fechaEntrada = "";
+        this.nick = "";
+        
     }
 
     public Monitor(String codMonitor) {
@@ -67,6 +75,16 @@ public class Monitor implements Serializable {
         this.nombre = nombre;
         this.dni = dni;
         this.fechaEntrada = fechaEntrada;
+    }
+    
+    public Monitor(String codMonitor, String nombre, String dni, String telefono, String correo, String fechaEntrada, String nick) {
+        this.codMonitor = codMonitor;
+        this.nombre = nombre;
+        this.dni = dni;
+        this.telefono = telefono;
+        this.correo = correo;
+        this.fechaEntrada = fechaEntrada;
+        this.nick = nick;
     }
 
     public Monitor(String codMonitor, String nombre, String dni, String telefono, String correo, String fechaEntrada, String nick, Set<Actividad> actividadSet) {

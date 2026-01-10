@@ -47,7 +47,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
         salirMenu = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1500, 1000));
+        setPreferredSize(new java.awt.Dimension(1500, 600));
 
         inicioMenu.setText("Inicio");
 

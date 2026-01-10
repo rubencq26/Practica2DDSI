@@ -25,16 +25,54 @@ public class MonitorDAO {
         consulta.setParameter("codMon", codMon);
         return consulta.getResultList();
     }
-    
-    public static List<Monitor> listarMonitores(Session session){
+
+    public static List<Monitor> listarMonitores(Session session) {
         Query consulta = session.createNativeQuery("SELECT * FROM MONITOR m", Monitor.class);
         System.out.println("Monitores encontrados");
         return consulta.getResultList();
     }
-    
-    public static String getMonitorNombre(Session session, String codMon){
+
+    public static String getMonitorNombre(Session session, String codMon) {
         Query consulta = session.createNativeQuery("SELECT m.nombre FROM MONITOR m WHERE m.codMonitor = :codMon", String.class);
         consulta.setParameter("codMon", codMon);
         return (String) consulta.getSingleResult();
+    }
+
+    public static boolean insertarMonitor(Session session, Monitor monitor) {
+        try {
+            session.persist(monitor);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean eliminarMonitor(Session session, Monitor monitor) {
+        try {
+            // Buscamos el objeto primero para asegurarnos de que existe y está gestionado
+            if (monitor != null) {
+                session.remove(monitor);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public static boolean actualizarMonitor(Session session, Monitor monitor){
+        try {
+            // Buscamos el objeto primero para asegurarnos de que existe y está gestionado
+            if (monitor != null) {
+                session.merge(monitor);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    
     }
 }

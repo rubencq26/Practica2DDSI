@@ -4,6 +4,7 @@
  */
 package Vista;
 
+import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -20,13 +21,14 @@ public class MonitorPanel extends javax.swing.JPanel {
     public JButton nuevoMonitor;
     public JButton bajaMonitor;
     public JButton actualizacionMonitor;
-            /**
-             * Creates new form MonitorPanel
-             */
+
+    /**
+     * Creates new form MonitorPanel
+     */
 
     public MonitorPanel() {
         initComponents();
-
+        this.setLayout(null);
         JLabel titulo = new JLabel("Gestion de Monitores");
         titulo.setBounds(30, 30, 300, 30);
         titulo.setFont(new Font("Segoe UI", Font.PLAIN, 24));
@@ -36,16 +38,32 @@ public class MonitorPanel extends javax.swing.JPanel {
         tablaMonitor.setFillsViewportHeight(true);
 
         JScrollPane scrollPane = new JScrollPane(tablaMonitor);
-        scrollPane.setBounds(30, 70, 1440, 300);
+        scrollPane.setBounds(30, 70, 1440, 291);
 
         scrollPane.getViewport().setBorder(null);
         add(scrollPane);
-        
+
         nuevoMonitor = new JButton("Nuevo Monitor");
         bajaMonitor = new JButton("Baja Monitor");
         actualizacionMonitor = new JButton("Actualizac Monitor");
-        
+
         nuevoMonitor.setFont(new Font("SegoeUI", Font.PLAIN, 8));
+        
+        nuevoMonitor = new JButton("Nuevo Monitor");
+        bajaMonitor = new JButton("Baja Monitor");
+        actualizacionMonitor = new JButton("Actualización Monitor");
+        
+        nuevoMonitor.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        bajaMonitor.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        actualizacionMonitor.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        
+        nuevoMonitor.setBounds(30, 375, 150, 30);
+        bajaMonitor.setBounds(185, 375, 150, 30);
+        actualizacionMonitor.setBounds(340, 375, 200, 30);
+        
+        add(nuevoMonitor);
+        add(bajaMonitor);
+        add(actualizacionMonitor);
         
 
     }

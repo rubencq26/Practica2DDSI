@@ -67,6 +67,7 @@ public class GestionTablas {
     }
 
     public static void rellenarTablaMonitores(List<Monitor> monitores) {
+        int i = 0;
         Object[] fila = new Object[7];
         for (Monitor monitor : monitores) {
             fila[0] = monitor.getCodMonitor();
@@ -77,7 +78,9 @@ public class GestionTablas {
             fila[5] = monitor.getFechaEntrada();
             fila[6] = monitor.getNick();
             modeloTablaMonitores.addRow(fila);
+            i++;
         }
+        
         System.out.println("Tabla rellenada");
     }
 
@@ -99,16 +102,18 @@ public class GestionTablas {
     }
 
     public static void dibujarTablaSocio(SocioPanel vSocio) {
-        String[] columnas = {"Codigo", "Nombre", "DNI", "Fecho de Nacimiento", "Teléfono", "Correo", "Fecha de Alta", "Cat"};
+        String[] columnas = {"Codigo", "Nombre", "DNI", "Fecha de Nacimiento", "Teléfono", "Correo", "Fecha de Alta", "Cat"};
         modeloTablaSocios.setColumnIdentifiers(columnas);
 
         JTable t = vSocio.tablaSocio;
         t.setFillsViewportHeight(true);
+        t.setShowGrid(true);
+        t.setGridColor(Color.LIGHT_GRAY);
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         t.getTableHeader().setResizingAllowed(false);
         t.getTableHeader().setReorderingAllowed(false);
         t.setAutoCreateRowSorter(true);
-        int[] anchuras = {60, 300, 100, 150, 100, 270, 150, 50};
+        int[] anchuras = {60, 300, 100, 100, 270, 150, 100};
 
         TableColumnModel modeloColumna = t.getColumnModel();
 
