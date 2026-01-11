@@ -25,7 +25,6 @@ public class MonitorPanel extends javax.swing.JPanel {
     /**
      * Creates new form MonitorPanel
      */
-
     public MonitorPanel() {
         initComponents();
         this.setLayout(null);
@@ -45,26 +44,19 @@ public class MonitorPanel extends javax.swing.JPanel {
 
         nuevoMonitor = new JButton("Nuevo Monitor");
         bajaMonitor = new JButton("Baja Monitor");
-        actualizacionMonitor = new JButton("Actualizac Monitor");
-
-        nuevoMonitor.setFont(new Font("SegoeUI", Font.PLAIN, 8));
-        
-        nuevoMonitor = new JButton("Nuevo Monitor");
-        bajaMonitor = new JButton("Baja Monitor");
         actualizacionMonitor = new JButton("Actualización Monitor");
-        
+
         nuevoMonitor.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         bajaMonitor.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         actualizacionMonitor.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        
+
         nuevoMonitor.setBounds(30, 375, 150, 30);
         bajaMonitor.setBounds(185, 375, 150, 30);
         actualizacionMonitor.setBounds(340, 375, 200, 30);
-        
+
         add(nuevoMonitor);
         add(bajaMonitor);
         add(actualizacionMonitor);
-        
 
     }
 

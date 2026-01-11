@@ -164,7 +164,8 @@ public class GestionTablas {
 
         JTable t = vActividad.tablaActividad;
         t.setFillsViewportHeight(true);
-        t.setShowGrid(true);              // <--- IMPORTANTE: Activa las líneas 
+        t.setShowGrid(true);
+        t.setGridColor(Color.LIGHT_GRAY);
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         t.getTableHeader().setResizingAllowed(false);
         t.getTableHeader().setReorderingAllowed(false);

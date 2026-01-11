@@ -24,4 +24,28 @@ public class ActividadDAO {
         return consulta.getResultList();
     }
     
+    public static boolean insertarActividad(Session session, Actividad actividad) {
+        try {
+            session.persist(actividad);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    
+    public static boolean eliminarActividad(Session session, Actividad actividad) {
+        try {
+            // Buscamos el objeto primero para asegurarnos de que existe y está gestionado
+            if (actividad != null) {
+                session.remove(actividad);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
 }

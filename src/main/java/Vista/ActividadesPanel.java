@@ -5,6 +5,7 @@
 package Vista;
 
 import java.awt.Font;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -16,12 +17,16 @@ import javax.swing.JTable;
 public class ActividadesPanel extends javax.swing.JPanel {
     
     public JTable tablaActividad;
+    public JButton nuevaActividad;
+    public JButton bajaActividad;
+    public JButton actualizacionActividad;
 
     /**
      * Creates new form ActividadesPanel
      */
     public ActividadesPanel() {
         initComponents();
+        this.setLayout(null);
         JLabel titulo = new JLabel("Gestion de Actividades");
         titulo.setBounds(30, 30, 300, 30);
         titulo.setFont(new Font("Segoe UI", Font.PLAIN, 24));
@@ -34,6 +39,22 @@ public class ActividadesPanel extends javax.swing.JPanel {
         
         scrollPane.getViewport().setBorder(null);
         add(scrollPane);
+        
+         nuevaActividad = new JButton("Nueva Actividad");
+        bajaActividad = new JButton("Baja Actividad");
+        actualizacionActividad = new JButton("Actualización Actividad");
+
+        nuevaActividad.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        bajaActividad.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        actualizacionActividad.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+
+        nuevaActividad.setBounds(30, 375, 150, 30);
+        bajaActividad.setBounds(185, 375, 150, 30);
+        actualizacionActividad.setBounds(340, 375, 200, 30);
+
+        add(nuevaActividad);
+        add(bajaActividad);
+        add(actualizacionActividad);
     }
 
     /**
@@ -61,3 +82,4 @@ public class ActividadesPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
+

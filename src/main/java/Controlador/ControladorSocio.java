@@ -62,11 +62,11 @@ public class ControladorSocio implements ActionListener{
                 int n = Integer.parseInt(num);
                 n++;
                 if (n < 10) {
-                    cod = "S00" + n;
+                    cod = "A00" + n;
                 } else if (n < 100) {
-                    cod = "S0" + n;
+                    cod = "A0" + n;
                 } else {
-                    cod = "S" + n;
+                    cod = "A" + n;
                 }
 
                 dialog = new InsertarSocioDialog(vPrincipal, true, cod);
@@ -82,7 +82,7 @@ public class ControladorSocio implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (vSocio.tablaSocio.getSelectedRow() == -1) {
-                    JOptionPane.showMessageDialog(dialog, "Error: Seleccione una fila de la tabla para proceder con la baja del monitor", null, JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(dialog, "Error: Seleccione una fila de la tabla para proceder con la baja del socio", null, JOptionPane.ERROR_MESSAGE);
                 } else {
                     String cod = (String) vSocio.tablaSocio.getValueAt(vSocio.tablaSocio.getSelectedRow(), 0);
                     Socio soc = new Socio();

@@ -16,6 +16,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -87,6 +88,28 @@ public class Actividad implements Serializable {
         this.precioBaseMes = precioBaseMes;
         this.socioSet = socioSet;
         this.monitorResponsable = monitorResponsable;
+    }
+    
+    public Actividad(String idActividad, String nombre, String dia, int hora, String descripcion, int precioBaseMes, Monitor monitorResponsable) {
+        this.idActividad = idActividad;
+        this.nombre = nombre;
+        this.dia = dia;
+        this.hora = hora;
+        this.descripcion = descripcion;
+        this.precioBaseMes = precioBaseMes;
+        this.monitorResponsable = monitorResponsable;
+        
+    }
+    
+    public Actividad(String idActividad, String nombre, String dia, int hora, String descripcion, int precioBaseMes) {
+        this.idActividad = idActividad;
+        this.nombre = nombre;
+        this.dia = dia;
+        this.hora = hora;
+        this.descripcion = descripcion;
+        this.precioBaseMes = precioBaseMes;
+        this.monitorResponsable = monitorResponsable;
+        
     }
     
     
