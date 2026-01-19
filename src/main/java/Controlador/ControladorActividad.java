@@ -14,6 +14,7 @@ import Utilidades.GestionTablas;
 import Vista.ActividadesPanel;
 import Vista.ActualizarActividadDialog;
 import Vista.ActualizarMonitorDialog;
+import Vista.EstadisticasDialog;
 import Vista.InsertarActividadDialog;
 import Vista.InsertarSocioDialog;
 import Vista.VistaMensajes;
@@ -66,22 +67,18 @@ public class ControladorActividad implements ActionListener {
                     if (lActividad == null || lActividad.isEmpty()) {
                         cod = "AC01";
                     } else {
-                        
+
                         String ultimoCod = (String) lActividad.getLast()[0];
 
-                        
                         String num = ultimoCod.substring(2);
                         int n = Integer.parseInt(num);
                         n++;
 
-                       
                         cod = String.format("AC%02d", n);
                     }
 
-                
                     dialog = new InsertarActividadDialog(vPrincipal, true, cod);
 
-                
                     DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
                     Session session = sessionFactory.openSession();
                     Transaction tr = session.beginTransaction();
@@ -192,7 +189,7 @@ public class ControladorActividad implements ActionListener {
 
                     try {
                         acDialog = new ActualizarActividadDialog(vPrincipal, true, act);
-                        
+
                         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
                         session = sessionFactory.openSession();
                         tr = session.beginTransaction();
@@ -210,20 +207,20 @@ public class ControladorActividad implements ActionListener {
 
                         if (lActividad != null) {
                             for (Monitor m : lMonitor) {
-                                model.addElement(m.getNombre()); 
+                                model.addElement(m.getNombre());
                             }
                         }
                         acDialog.monitor.setModel(model);
-                        
-                        int indice =  0;
+
+                        int indice = 0;
                         int i = 0;
-                        for (Monitor m: lMonitor) {
-                            if(m.getCodMonitor().equals(act.getMonitorResponsable().getCodMonitor())){
+                        for (Monitor m : lMonitor) {
+                            if (m.getCodMonitor().equals(act.getMonitorResponsable().getCodMonitor())) {
                                 indice = i;
                             }
                             i++;
                         }
-                        
+
                         acDialog.monitor.setSelectedIndex(indice);
 
                         acDialog.actualizarButton.addActionListener(ControladorActividad.this);
@@ -237,6 +234,69 @@ public class ControladorActividad implements ActionListener {
                 }
             }
 
+        });
+
+        vActividad.filtrado.addActionListener(new ActionListener() {
+            List<Object[]> lFiltrada;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Session session = sessionFactory.openSession();
+                Transaction tr = session.beginTransaction();
+                try {
+                    lFiltrada = ActividadDAO.listarActividades(session);
+
+                    tr.commit();
+
+                } catch (Exception ex) {
+                    tr.rollback();
+                    VistaMensajes.error(ex.getMessage(), vPrincipal);
+                    return;
+                } finally {
+                    if (session != null && session.isOpen()) {
+                        session.close();
+                    }
+                }
+                
+                if(vActividad.filtradoCombo.getSelectedIndex() == 0){
+                    dibujaRellenaTablaActividad();
+                }else{
+                    String dia = (String) vActividad.filtradoCombo.getSelectedItem();
+                    
+                    lFiltrada.removeIf(obj -> !obj[2].equals(dia));
+                    GestionTablas.vaciarTablaActividad();
+                    GestionTablas.rellenarTablaActividad(lFiltrada);
+                }
+                
+            }
+
+        });
+        
+        vActividad.estadisticas.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(vActividad.tablaActividad.getSelectedRow() == -1){
+                    Vista.VistaMensajes.error("Selecciona una actividad de la tabla apra ver las estadísticas", vPrincipal);
+                }else{
+                    String idActividad = (String) vActividad.tablaActividad.getValueAt(vActividad.tablaActividad.getSelectedRow(), 0);
+                    List<Object> resultados = ActividadDAO.estadisticasActividad(sessionFactory, idActividad);
+                    
+                    EstadisticasDialog est = new EstadisticasDialog(vPrincipal, true);
+                    est.nombreActividad.setText(idActividad + " - " + vActividad.tablaActividad.getValueAt(vActividad.tablaActividad.getSelectedRow(), 1));
+                    Integer nSocios = (Integer) resultados.get(0);
+                    Double edadMedia = (Double) resultados.get(1);
+                    Character categoria = (Character) resultados.get(2);
+                    Double ingresos = (Double) resultados.get(3);
+                    
+                    est.nSocios.setText(nSocios+ "");
+                    est.edadMedia.setText(edadMedia + "");
+                    est.categoria.setText(categoria + "");
+                    est.ingresos.setText(ingresos + "");
+                    
+                    est.setVisible(true);
+                }
+            }
+            
         });
 
     }
@@ -335,7 +395,7 @@ public class ControladorActividad implements ActionListener {
                 }
             }
             case "ActualizarActividad" -> {
-               try {
+                try {
                     // 1. Recuperar datos con tipos correctos
                     String codigo = acDialog.codigoTextField.getText();
                     String nombre = acDialog.nombreTextField.getText();
@@ -353,9 +413,7 @@ public class ControladorActividad implements ActionListener {
                         JOptionPane.showMessageDialog(acDialog, "Error: Datos inválidos o campos vacíos", "Error", JOptionPane.ERROR_MESSAGE);
                         break;
                     }
-                    
-                    
-                   
+
                     Session session = sessionFactory.openSession();
                     Transaction tr = session.beginTransaction();
 
@@ -364,19 +422,19 @@ public class ControladorActividad implements ActionListener {
                         List<Monitor> lMonitores = MonitorDAO.listarMonitores(session);
                         Actividad actividad = new Actividad();
                         List<Actividad> lActi = ActividadDAO.listarActividadesA(session);
-                        for(Actividad act : lActi){
-                            if(act.getIdActividad().equals(codigo)){
+                        for (Actividad act : lActi) {
+                            if (act.getIdActividad().equals(codigo)) {
                                 actividad = act;
                             }
                         }
-                        
+
                         actividad.setNombre(nombre);
                         actividad.setDia(dia);
                         actividad.setHora(h);
                         actividad.setDescripcion(desc);
                         actividad.setPrecioBaseMes(p);
                         if (lMonitores.isEmpty() || monitIndex == -1) {
-                            
+
                         } else {
                             Monitor monitorElegido = lMonitores.get(monitIndex);
                             actividad.setMonitorResponsable(monitorElegido);

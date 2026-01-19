@@ -152,7 +152,7 @@ public class ActualizarActividadDialog extends javax.swing.JDialog {
             }
         });
 
-        diaCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado", "Domingo" }));
+        diaCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" }));
 
         hora.setValue(12);
 

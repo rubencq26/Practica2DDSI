@@ -62,11 +62,11 @@ public class ControladorSocio implements ActionListener{
                 int n = Integer.parseInt(num);
                 n++;
                 if (n < 10) {
-                    cod = "A00" + n;
+                    cod = "S00" + n;
                 } else if (n < 100) {
-                    cod = "A0" + n;
+                    cod = "S0" + n;
                 } else {
-                    cod = "A" + n;
+                    cod = "S" + n;
                 }
 
                 dialog = new InsertarSocioDialog(vPrincipal, true, cod);

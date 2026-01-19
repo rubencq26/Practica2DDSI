@@ -5,7 +5,9 @@
 package Vista;
 
 import java.awt.Font;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,6 +22,9 @@ public class ActividadesPanel extends javax.swing.JPanel {
     public JButton nuevaActividad;
     public JButton bajaActividad;
     public JButton actualizacionActividad;
+    public JButton filtrado;
+    public JComboBox<String> filtradoCombo;
+    public JButton estadisticas;
 
     /**
      * Creates new form ActividadesPanel
@@ -43,18 +48,36 @@ public class ActividadesPanel extends javax.swing.JPanel {
          nuevaActividad = new JButton("Nueva Actividad");
         bajaActividad = new JButton("Baja Actividad");
         actualizacionActividad = new JButton("Actualización Actividad");
+        filtrado = new JButton("Filtrar por dia");
+        estadisticas = new JButton("Estadísticas");
 
         nuevaActividad.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         bajaActividad.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         actualizacionActividad.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        filtrado.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        estadisticas.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+       
 
         nuevaActividad.setBounds(30, 375, 150, 30);
         bajaActividad.setBounds(185, 375, 150, 30);
         actualizacionActividad.setBounds(340, 375, 200, 30);
+        estadisticas.setBounds(545, 375, 150, 30);
+        filtrado.setBounds(1115, 375, 150, 30);
+        
+        
+        String[] diasStr = {"Todos los Dias", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"}; 
+        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>(diasStr);
+        filtradoCombo = new JComboBox<>(modelo);
+        
+        filtradoCombo.setBounds(1270, 375, 200, 30);
+        
 
         add(nuevaActividad);
         add(bajaActividad);
         add(actualizacionActividad);
+        add(filtrado);
+        add(filtradoCombo);
+        add(estadisticas);
     }
 
     /**
