@@ -12,12 +12,15 @@ import Modelo.Socio;
 import Modelo.SocioDAO;
 import Utilidades.GestionTablas;
 import Vista.ActividadesPanel;
+import Vista.ActualizarActividadDialog;
+import Vista.ActualizarMonitorDialog;
 import Vista.InsertarActividadDialog;
 import Vista.InsertarSocioDialog;
 import Vista.VistaMensajes;
 import Vista.VistaPrincipal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +44,8 @@ public class ControladorActividad implements ActionListener {
     private final VistaPrincipal vPrincipal;
     private List<Object[]> lActividad;
     private InsertarActividadDialog dialog;
+    private List<Monitor> lMonitor;
+    private ActualizarActividadDialog acDialog;
 
     public ControladorActividad(SessionFactory sessionFactory, VistaPrincipal vPrincipal) {
         this.sessionFactory = sessionFactory;
@@ -61,26 +66,40 @@ public class ControladorActividad implements ActionListener {
                     if (lActividad == null || lActividad.isEmpty()) {
                         cod = "AC01";
                     } else {
-                        // Obtenemos el último código (ej: "AC10")
+                        
                         String ultimoCod = (String) lActividad.getLast()[0];
 
-                        // IMPORTANTE: Si el código empieza por "AC", hay que saltar 2 caracteres
+                        
                         String num = ultimoCod.substring(2);
                         int n = Integer.parseInt(num);
                         n++;
 
-                        // Formateamos para mantener el estilo AC01, AC10...
+                       
                         cod = String.format("AC%02d", n);
                     }
 
-                    // Creamos el diálogo
+                
                     dialog = new InsertarActividadDialog(vPrincipal, true, cod);
 
-                    // Rellenar el monitor ComboBox (ArrayList a Model)
+                
                     DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+                    Session session = sessionFactory.openSession();
+                    Transaction tr = session.beginTransaction();
+                    try {
+                        lMonitor = MonitorDAO.listarMonitores(session);
+
+                    } catch (Exception ex) {
+                        tr.rollback();
+                        VistaMensajes.error(ex.getMessage(), vPrincipal);
+                    } finally {
+                        if (session != null && session.isOpen()) {
+                            session.close();
+                        }
+                    }
+
                     if (lActividad != null) {
-                        for (Object[] ob : lActividad) {
-                            model.addElement((String) ob[6]); // Asumo que el nombre del monitor está en la posición 6
+                        for (Monitor m : lMonitor) {
+                            model.addElement(m.getNombre()); // Asumo que el nombre del monitor está en la posición 6
                         }
                     }
                     dialog.monitor.setModel(model);
@@ -99,9 +118,7 @@ public class ControladorActividad implements ActionListener {
                 }
             }
         });
-        
-        
-       
+
         vActividad.bajaActividad.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -115,8 +132,8 @@ public class ControladorActividad implements ActionListener {
                             obj = o;
                         }
                     }
-                    
-                    Actividad act = new Actividad((String) obj[0],(String) obj[1], (String) obj[2], (int) obj[3], (String) obj[4], (int) obj[5]);
+
+                    Actividad act = new Actividad((String) obj[0], (String) obj[1], (String) obj[2], (int) obj[3], (String) obj[4], (int) obj[5]);
 
                     int confirmar = JOptionPane.showConfirmDialog(vPrincipal, "¿Deseas eliminar la  Actividad " + cod + "?", "Baja Actividad", JOptionPane.YES_NO_OPTION);
                     if (confirmar == JOptionPane.YES_OPTION) {
@@ -143,7 +160,84 @@ public class ControladorActividad implements ActionListener {
             }
 
         });
-        
+
+        vActividad.actualizacionActividad.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (vActividad.tablaActividad.getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(vPrincipal, "Error: Seleccione una fila de la tabla para proceder con la actualizacion de la actividad", null, JOptionPane.ERROR_MESSAGE);
+                } else {
+                    String cod = (String) vActividad.tablaActividad.getValueAt(vActividad.tablaActividad.getSelectedRow(), 0);
+                    Actividad act = new Actividad();
+                    Session session = sessionFactory.openSession();
+                    Transaction tr = session.beginTransaction();
+                    List<Actividad> lActi = new ArrayList<>();
+                    try {
+                        lActi = ActividadDAO.listarActividadesA(session);
+
+                    } catch (Exception ex) {
+                        tr.rollback();
+                        VistaMensajes.error(ex.getMessage(), vPrincipal);
+                    } finally {
+                        if (session != null && session.isOpen()) {
+                            session.close();
+                        }
+                    }
+
+                    for (Actividad a : lActi) {
+                        if (a.getIdActividad().equals(cod)) {
+                            act = a;
+                        }
+                    }
+
+                    try {
+                        acDialog = new ActualizarActividadDialog(vPrincipal, true, act);
+                        
+                        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+                        session = sessionFactory.openSession();
+                        tr = session.beginTransaction();
+                        try {
+                            lMonitor = MonitorDAO.listarMonitores(session);
+
+                        } catch (Exception ex) {
+                            tr.rollback();
+                            VistaMensajes.error(ex.getMessage(), vPrincipal);
+                        } finally {
+                            if (session != null && session.isOpen()) {
+                                session.close();
+                            }
+                        }
+
+                        if (lActividad != null) {
+                            for (Monitor m : lMonitor) {
+                                model.addElement(m.getNombre()); 
+                            }
+                        }
+                        acDialog.monitor.setModel(model);
+                        
+                        int indice =  0;
+                        int i = 0;
+                        for (Monitor m: lMonitor) {
+                            if(m.getCodMonitor().equals(act.getMonitorResponsable().getCodMonitor())){
+                                indice = i;
+                            }
+                            i++;
+                        }
+                        
+                        acDialog.monitor.setSelectedIndex(indice);
+
+                        acDialog.actualizarButton.addActionListener(ControladorActividad.this);
+                        acDialog.cancelarButton.addActionListener(e2 -> acDialog.dispose());
+                        acDialog.setLocationRelativeTo(vPrincipal);
+                        acDialog.setVisible(true);
+
+                    } catch (Exception ex) {
+                        VistaMensajes.error("Error de creacion", vPrincipal);
+                    }
+                }
+            }
+
+        });
 
     }
 
@@ -240,53 +334,79 @@ public class ControladorActividad implements ActionListener {
                     ex.printStackTrace();
                 }
             }
-            case "ActualizarSocio" -> {
-                /*String codigo = acDialog.codigoTextField.getText();
-                String nombre = acDialog.nombreTextField.getText();
-                String dni = acDialog.dniTextField.getText();
-                String telefono = acDialog.telefonoTextField.getText();
-                String correo = acDialog.correoTextField.getText();
-                Date fNac = acDialog.fNac.getDate();
-                SimpleDateFormat sdfn = new SimpleDateFormat("dd/MM/yyyy");
-                String fechaNacFormateada = (fNac != null) ? sdfn.format(fNac) : "";
-                Date fAlt = acDialog.fAlt.getDate();
-                SimpleDateFormat sdfa = new SimpleDateFormat("dd/MM/yyyy");
-                String fechaAltFormateada = (fNac != null) ? sdfa.format(fAlt) : "";
-                String categoria = (String) acDialog.categoria.getSelectedItem();
-                boolean ok = false;
-                if (nombre.isEmpty() || dni.isEmpty() || nombre.isEmpty() || telefono.isEmpty() || correo.isEmpty() || fechaNacFormateada.isEmpty() || fechaAltFormateada.isEmpty()) {
-                    JOptionPane.showMessageDialog(acDialog, "Error: Campos de texto vacios", null, JOptionPane.ERROR_MESSAGE);
-                    break;
-                }
+            case "ActualizarActividad" -> {
+               try {
+                    // 1. Recuperar datos con tipos correctos
+                    String codigo = acDialog.codigoTextField.getText();
+                    String nombre = acDialog.nombreTextField.getText();
+                    String dia = (String) acDialog.diaCombo.getSelectedItem();
+                    String desc = acDialog.descripcion.getText();
 
-                Socio soc = new Socio(codigo, nombre, dni, fechaNacFormateada, telefono, correo, fechaAltFormateada, categoria.charAt(0));
-                Session session = sessionFactory.openSession();
-                Transaction tr = session.beginTransaction();
-                try {
-                    ok = SocioDAO.actualizarSocio(session, soc);
-                    if (ok) {
-                        tr.commit();
-                    } else {
-                        tr.rollback();
+                    // JSpinner devuelve Integer, no String
+                    int h = (int) acDialog.hora.getValue();
+                    int p = (int) acDialog.precio.getValue();
+
+                    int monitIndex = acDialog.monitor.getSelectedIndex();
+
+                    // 2. Validación lógica corregida
+                    if (nombre.isEmpty() || desc.isEmpty() || h < 0 || h > 24 || p < 0) {
+                        JOptionPane.showMessageDialog(acDialog, "Error: Datos inválidos o campos vacíos", "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
                     }
-                } catch (Exception exc) {
-                    tr.rollback();
-                    VistaMensajes.error(exc.getMessage(), vPrincipal);
-                    ok = false;
+                    
+                    
+                   
+                    Session session = sessionFactory.openSession();
+                    Transaction tr = session.beginTransaction();
 
-                } finally {
-                    if (session != null && session.isOpen()) {
-                        session.close();
+                    try {
+                        // Obtenemos la lista real de monitores para sacar el objeto
+                        List<Monitor> lMonitores = MonitorDAO.listarMonitores(session);
+                        Actividad actividad = new Actividad();
+                        List<Actividad> lActi = ActividadDAO.listarActividadesA(session);
+                        for(Actividad act : lActi){
+                            if(act.getIdActividad().equals(codigo)){
+                                actividad = act;
+                            }
+                        }
+                        
+                        actividad.setNombre(nombre);
+                        actividad.setDia(dia);
+                        actividad.setHora(h);
+                        actividad.setDescripcion(desc);
+                        actividad.setPrecioBaseMes(p);
+                        if (lMonitores.isEmpty() || monitIndex == -1) {
+                            
+                        } else {
+                            Monitor monitorElegido = lMonitores.get(monitIndex);
+                            actividad.setMonitorResponsable(monitorElegido);
+                        }
+
+                        boolean ok = ActividadDAO.insertarActividad(session, actividad);
+
+                        if (ok) {
+                            tr.commit();
+                            JOptionPane.showMessageDialog(acDialog, "Actividad actualizada correctamente");
+                            dibujaRellenaTablaActividad();
+                            acDialog.dispose();
+                        } else {
+                            tr.rollback();
+                        }
+
+                    } catch (Exception exc) {
+                        if (tr != null) {
+                            tr.rollback();
+                        }
+                        VistaMensajes.error("Error DB: " + exc.getMessage(), vPrincipal);
+                    } finally {
+                        if (session != null) {
+                            session.close();
+                        }
                     }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(acDialog, "Error de formato: " + ex.getMessage());
+                    ex.printStackTrace();
                 }
-                if (ok) {
-                    JOptionPane.showMessageDialog(acDialog, "Socio actualizado correctamente", null, JOptionPane.INFORMATION_MESSAGE);
-                }
-
-                dibujaRellenaTablaSocios();
-                acDialog.dispose();
-
-                break;*/
             }
 
         }

@@ -27,6 +27,83 @@ public class GestionTablas {
     private static DefaultTableModel modeloTablaMonitores;
     private static DefaultTableModel modeloTablaSocios;
     private static DefaultTableModel modeloTablaActividad;
+    private static DefaultTableModel modeloTablaRealiza1;
+    private static DefaultTableModel modeloTablaRealiza2;
+
+    public static void inicializarTablaRealiza(Vista.InscripcionesPanel vInscripcionesPanel) {
+        modeloTablaRealiza1 = new DefaultTableModel(new Object[]{"Actividades Inscritas"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        modeloTablaRealiza2 = new DefaultTableModel(new Object[]{"Actividades Disponibles"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        vInscripcionesPanel.tabla1.setModel(modeloTablaRealiza1);
+        vInscripcionesPanel.tabla2.setModel(modeloTablaRealiza2);
+
+    }
+
+    public static void vaciarTablasInscripciones() {
+        if (modeloTablaRealiza1 != null) {
+            modeloTablaRealiza1.setRowCount(0);
+        }
+        if (modeloTablaRealiza2 != null) {
+            modeloTablaRealiza2.setRowCount(0);
+        }
+    }
+
+    public static void rellenarTablaRealiza1(List<String> actividades) {
+        int i = 0;
+        Object[] ob = new Object[1];
+        for (String st : actividades) {
+            ob[0] = st;
+            modeloTablaRealiza1.addRow(ob);
+            i++;
+        }
+
+        System.out.println("Tabla1 rellenada");
+    }
+
+    public static void rellenarTablaRealiza2(List<String> actividades) {
+        int i = 0;
+        Object[] ob = new Object[1];
+        for (String st : actividades) {
+            ob[0] = st;
+            modeloTablaRealiza2.addRow(ob);
+            i++;
+        }
+
+        System.out.println("Tabla1 rellenada");
+    }
+
+    public static void dibujarTablaRealiza1(Vista.InscripcionesPanel vInscripcionesPanel) {
+        JTable t = vInscripcionesPanel.tabla1;
+        t.setFillsViewportHeight(true);
+        t.setShowGrid(true);
+        t.setGridColor(Color.LIGHT_GRAY);
+        t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        t.getTableHeader().setResizingAllowed(false);
+        t.getTableHeader().setReorderingAllowed(false);
+        t.setAutoCreateRowSorter(true);
+    }
+
+    public static void dibujarTablaRealiza2(Vista.InscripcionesPanel vInscripcionesPane) {
+        JTable t = vInscripcionesPane.tabla2;
+        t.setFillsViewportHeight(true);
+        t.setShowGrid(true);
+        t.setGridColor(Color.LIGHT_GRAY);
+        t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        t.getTableHeader().setResizingAllowed(false);
+        t.getTableHeader().setReorderingAllowed(false);
+        t.setAutoCreateRowSorter(true);
+    }
 
     public static void inicializarTablaMonitor(Vista.MonitorPanel vMonitor) {
         modeloTablaMonitores = new DefaultTableModel() {
@@ -80,7 +157,7 @@ public class GestionTablas {
             modeloTablaMonitores.addRow(fila);
             i++;
         }
-        
+
         System.out.println("Tabla rellenada");
     }
 

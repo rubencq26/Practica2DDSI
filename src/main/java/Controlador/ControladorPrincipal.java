@@ -39,6 +39,7 @@ public class ControladorPrincipal implements ActionListener {
     private final ControladorSocio cSocio;
     private final ControladorActividad cActividad;
     private final ControladorMonitor cMonitor;
+    private final ControladorInscripciones cInscripciones;
 
     public ControladorPrincipal(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -53,6 +54,7 @@ public class ControladorPrincipal implements ActionListener {
         cSocio = new ControladorSocio(sessionFactory, vPrincipal);
         vPrincipal.add(vInicio);
         cActividad = new ControladorActividad(sessionFactory, vPrincipal);
+        cInscripciones = new ControladorInscripciones(sessionFactory, vPrincipal);
 
         vInicio.setVisible(true);
 
@@ -64,6 +66,7 @@ public class ControladorPrincipal implements ActionListener {
         vPrincipal.socioMenu.addActionListener(this);
         vPrincipal.actividadMenu.addActionListener(this);
         vPrincipal.salirMenu.addActionListener(this);
+        vPrincipal.inscripcionesMenu.addActionListener(this);
     }
 
     @Override
@@ -80,6 +83,9 @@ public class ControladorPrincipal implements ActionListener {
                 break;
             case "GestionActividades":
                 muestraPanel("Actividad");
+                break;
+            case "Inscripciones":
+                muestraPanel("Inscripciones");
                 break;
             case "SalirMenu":
                 System.exit(0);
@@ -107,6 +113,9 @@ public class ControladorPrincipal implements ActionListener {
             case "Actividad":
                 cActividad.mostrarPanel(true);
                 break;
+            case "Inscripciones":
+                cInscripciones.muestraPanel(true);
+                
         }
     }
 

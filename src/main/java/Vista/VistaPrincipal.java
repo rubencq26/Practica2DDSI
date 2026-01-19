@@ -34,6 +34,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
         inicioMenu = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -43,8 +44,12 @@ public class VistaPrincipal extends javax.swing.JFrame {
         socioMenu = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         actividadMenu = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        inscripcionesMenu = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         salirMenu = new javax.swing.JMenuItem();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1500, 600));
@@ -91,6 +96,13 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu4);
 
+        jMenu1.setText("Utilidades");
+
+        inscripcionesMenu.setText("Inscripciones");
+        jMenu1.add(inscripcionesMenu);
+
+        jMenuBar1.add(jMenu1);
+
         jMenu5.setText("Salir");
 
         salirMenu.setText("Salir");
@@ -136,11 +148,14 @@ public class VistaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JMenuItem actividadMenu;
     public javax.swing.JMenu inicioMenu;
+    public javax.swing.JMenuItem inscripcionesMenu;
+    private javax.swing.JMenu jMenu1;
     public javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     public javax.swing.JMenuItem monitorMenu;
     public javax.swing.JMenuItem salirMenu;

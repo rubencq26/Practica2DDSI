@@ -4,25 +4,58 @@
  */
 package Vista;
 
+import Modelo.Actividad;
 import org.hibernate.SessionFactory;
 
 /**
  *
  * @author rubco
  */
-public class InsertarActividadDialog extends javax.swing.JDialog {
+public class ActualizarActividadDialog extends javax.swing.JDialog {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(InsertarActividadDialog.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ActualizarActividadDialog.class.getName());
   
     /**
      * Creates new form InsertarMonitorDialog
      */
-    public InsertarActividadDialog(java.awt.Frame parent, boolean modal, String cod) {
+    public ActualizarActividadDialog(java.awt.Frame parent, boolean modal, Actividad act) {
         super(parent, modal);
         initComponents();
         
-        codigoTextField.setText(cod);
+        codigoTextField.setText(act.getIdActividad());
         codigoTextField.setEnabled(false);
+        
+        nombreTextField.setText(act.getNombre());
+        String dia = act.getDia();
+        int indice = 0;
+        switch(dia){
+            case "Lunes":
+                indice = 0;
+                break;
+            case "Martes":
+                indice = 1;
+                break;
+            case "Miércoles":
+                indice = 2;
+                break;
+            case "Jueves":
+                indice = 3;
+                break;
+            case "Viernes":
+                indice = 4;
+                break;
+            case "Sabado":
+                indice = 5;
+                break;
+            case "Domingo":
+                indice = 6;
+                break;
+        }
+        diaCombo.setSelectedIndex(indice);
+        hora.setValue(act.getHora());
+        descripcion.setText(act.getDescripcion());
+        precio.setValue(act.getPrecioBaseMes());
+        
         
     }
 
@@ -45,7 +78,7 @@ public class InsertarActividadDialog extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         descripcion = new javax.swing.JTextField();
-        insertarButton = new javax.swing.JButton();
+        actualizarButton = new javax.swing.JButton();
         cancelarButton = new javax.swing.JButton();
         monitor = new javax.swing.JComboBox<>();
         diaCombo = new javax.swing.JComboBox<>();
@@ -53,7 +86,7 @@ public class InsertarActividadDialog extends javax.swing.JDialog {
         precio = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Nueva Actividad");
+        setTitle("Actualizar Actividad");
         setSize(new java.awt.Dimension(1000, 300));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -95,12 +128,12 @@ public class InsertarActividadDialog extends javax.swing.JDialog {
             }
         });
 
-        insertarButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        insertarButton.setText("Insertar");
-        insertarButton.setActionCommand("InsertarActividad");
-        insertarButton.addActionListener(new java.awt.event.ActionListener() {
+        actualizarButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        actualizarButton.setText("Actualizar");
+        actualizarButton.setActionCommand("ActualizarActividad");
+        actualizarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                insertarButtonActionPerformed(evt);
+                actualizarButtonActionPerformed(evt);
             }
         });
 
@@ -154,7 +187,7 @@ public class InsertarActividadDialog extends javax.swing.JDialog {
                             .addComponent(monitor, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(precio, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(insertarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(actualizarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(33, Short.MAX_VALUE))
@@ -186,7 +219,7 @@ public class InsertarActividadDialog extends javax.swing.JDialog {
                     .addComponent(hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(insertarButton)
+                    .addComponent(actualizarButton)
                     .addComponent(cancelarButton))
                 .addGap(15, 15, 15))
         );
@@ -206,9 +239,9 @@ public class InsertarActividadDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_descripcionActionPerformed
 
-    private void insertarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarButtonActionPerformed
+    private void actualizarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_insertarButtonActionPerformed
+    }//GEN-LAST:event_actualizarButtonActionPerformed
 
     private void cancelarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarButtonActionPerformed
         // TODO add your handling code here:
@@ -224,12 +257,12 @@ public class InsertarActividadDialog extends javax.swing.JDialog {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JButton actualizarButton;
     public javax.swing.JButton cancelarButton;
     public javax.swing.JTextField codigoTextField;
     public javax.swing.JTextField descripcion;
     public javax.swing.JComboBox<String> diaCombo;
     public javax.swing.JSpinner hora;
-    public javax.swing.JButton insertarButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
