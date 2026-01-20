@@ -25,8 +25,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 /**
+ * Controlador encargado de gestionar la lógica de la vista de Monitores. Maneja
+ * las operaciones CRUD (Crear, Leer, Actualizar, Borrar) sobre la entidad
+ * Monitor y la interacción con los diálogos de inserción y actualización.
  *
- * @author rubco
+ * * @author rubco
  */
 public class ControladorMonitor implements ActionListener {
 
@@ -37,6 +40,13 @@ public class ControladorMonitor implements ActionListener {
     private InsertarMonitorDialog dialog;
     private ActualizarMonitorDialog acDialog;
 
+    /**
+     * Constructor del controlador de monitores. Inicializa el panel, configura
+     * las tablas y añade los listeners a los botones de la vista.
+     *
+     * * @param sessionFactory La factoría de sesiones de Hibernate.
+     * @param vPrincipal La ventana principal de la aplicación.
+     */
     public ControladorMonitor(SessionFactory sessionFactory, VistaPrincipal vPrincipal) {
         vMonitor = new MonitorPanel();
         this.sessionFactory = sessionFactory;
@@ -48,6 +58,10 @@ public class ControladorMonitor implements ActionListener {
         GestionTablas.inicializarTablaMonitor(vMonitor);
         dibujaRellenaTablaMonitores();
 
+        /**
+         * Listener para el botón de "Nuevo Monitor". Calcula el siguiente
+         * código secuencial disponible y abre el diálogo de inserción.
+         */
         vMonitor.nuevoMonitor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,6 +86,10 @@ public class ControladorMonitor implements ActionListener {
 
         });
 
+        /**
+         * Listener para el botón de "Baja Monitor". Solicita confirmación y
+         * elimina el monitor seleccionado de la base de datos.
+         */
         vMonitor.bajaMonitor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -112,6 +130,10 @@ public class ControladorMonitor implements ActionListener {
 
         });
 
+        /**
+         * Listener para el botón de "Actualización Monitor". Abre el diálogo de
+         * actualización cargando los datos del monitor seleccionado.
+         */
         vMonitor.actualizacionMonitor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -143,6 +165,10 @@ public class ControladorMonitor implements ActionListener {
 
     }
 
+    /**
+     * Recupera la lista de monitores de la base de datos y refresca la tabla en
+     * la vista.
+     */
     private void dibujaRellenaTablaMonitores() {
         try {
             GestionTablas.dibujarTablaMonitores(vMonitor);
@@ -168,10 +194,21 @@ public class ControladorMonitor implements ActionListener {
         }
     }
 
+    /**
+     * Muestra u oculta el panel de monitores.
+     *
+     * * @param mostrar true para mostrar el panel, false para ocultarlo.
+     */
     public void mostrarPanel(boolean mostrar) {
         vMonitor.setVisible(mostrar);
     }
 
+    /**
+     * Procesa los eventos de acción generados por los diálogos de inserción y
+     * actualización.
+     *
+     * * @param e El evento de acción.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -186,12 +223,42 @@ public class ControladorMonitor implements ActionListener {
                 String fechaFormateada = (fecha != null) ? sdf.format(fecha) : "";
                 String nick = dialog.nickTextFIeld.getText();
                 boolean ok = false;
-                if (nombre.isEmpty() || dni.isEmpty() || nombre.isEmpty() || telefono.isEmpty() || correo.isEmpty() || fechaFormateada.isEmpty() || nick.isEmpty()) {
+                if (nombre.isEmpty() || dni.isEmpty() || nombre.isEmpty() || telefono.isEmpty() || correo.isEmpty() || fechaFormateada.isEmpty()) {
                     JOptionPane.showMessageDialog(dialog, "Error: Campos de texto vacios", null, JOptionPane.ERROR_MESSAGE);
                     break;
                 }
 
-                Monitor mon = new Monitor(codigo, nombre, dni, telefono, correo, fechaFormateada, nick);
+                if (!dni.matches("^[0-9]{8}[A-Z]$")) {
+                    JOptionPane.showMessageDialog(dialog, "Error: Formato del dni incorrecto (8 Numeros y una Mayúscula)", null, JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+
+                if (!correo.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
+                    JOptionPane.showMessageDialog(dialog, "Error: Formato del correo incorrecto (xx@xx)", null, JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+
+                if (!telefono.matches("^[0-9]{9}$")) {
+                    JOptionPane.showMessageDialog(dialog, "Error: Formato del telefono incorrecto (9 digitos)", null, JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+
+                
+                Date fechaActual = new Date(); // Captura la fecha y hora actual
+
+                if (fecha != null) {
+                    if (fecha.after(fechaActual)) {
+                        JOptionPane.showMessageDialog(dialog, "Error: La fecha es posterior a la fecha actual", null, JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                }
+
+                Monitor mon;
+                if (!nick.isEmpty()) {
+                    mon = new Monitor(codigo, nombre, dni, telefono, correo, fechaFormateada, nick);
+                } else {
+                    mon = new Monitor(codigo, nombre, dni, telefono, correo, fechaFormateada);
+                }
                 Session session = sessionFactory.openSession();
                 Transaction tr = session.beginTransaction();
                 try {
@@ -230,12 +297,42 @@ public class ControladorMonitor implements ActionListener {
                 String fechaFormateada = (fecha != null) ? sdf.format(fecha) : "";
                 String nick = acDialog.nickTextFIeld.getText();
                 boolean ok = false;
-                if (nombre.isEmpty() || dni.isEmpty() || nombre.isEmpty() || telefono.isEmpty() || correo.isEmpty() || fechaFormateada.isEmpty() || nick.isEmpty()) {
+                if (nombre.isEmpty() || dni.isEmpty() || nombre.isEmpty() || telefono.isEmpty() || correo.isEmpty() || fechaFormateada.isEmpty()) {
                     JOptionPane.showMessageDialog(acDialog, "Error: Campos de texto vacios", null, JOptionPane.ERROR_MESSAGE);
                     break;
                 }
 
-                Monitor mon = new Monitor(codigo, nombre, dni, telefono, correo, fechaFormateada, nick);
+                if (!dni.matches("^[0-9]{8}[A-Z]$")) {
+                    JOptionPane.showMessageDialog(acDialog, "Error: Formato del dni incorrecto (8 Numeros y una Mayúscula)", null, JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+
+                if (!correo.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
+                    JOptionPane.showMessageDialog(acDialog, "Error: Formato del correo incorrecto (xx@xx)", null, JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+
+                if (!telefono.matches("^[0-9]{9}$")) {
+                    JOptionPane.showMessageDialog(acDialog, "Error: Formato del telefono incorrecto (9 digitos)", null, JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+                
+                Date fechaActual = new Date(); // Captura la fecha y hora actual
+
+                if (fecha != null) {
+                    if (fecha.after(fechaActual)) {
+                        JOptionPane.showMessageDialog(acDialog, "Error: La fecha es posterior a la fecha actual", null, JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                    
+                }
+
+                Monitor mon;
+                if (!nick.isEmpty()) {
+                    mon = new Monitor(codigo, nombre, dni, telefono, correo, fechaFormateada, nick);
+                } else {
+                    mon = new Monitor(codigo, nombre, dni, telefono, correo, fechaFormateada);
+                }
                 Session session = sessionFactory.openSession();
                 Transaction tr = session.beginTransaction();
                 try {
@@ -261,7 +358,7 @@ public class ControladorMonitor implements ActionListener {
 
                 dibujaRellenaTablaMonitores();
                 acDialog.dispose();
-                
+
                 break;
             }
 

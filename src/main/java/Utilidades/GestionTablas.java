@@ -4,14 +4,12 @@
  */
 package Utilidades;
 
-import Modelo.Actividad;
 import Modelo.Monitor;
 import Modelo.Socio;
 import Vista.ActividadesPanel;
 import Vista.MonitorPanel;
 import Vista.SocioPanel;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -19,8 +17,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 /**
- *
- * @author rubco
+ * Clase de utilidades encargada de la gestión, dibujo y rellenado de las tablas (JTable) 
+ * de la interfaz gráfica. Centraliza la configuración de modelos y estilos visuales.
+ * * @author rubco
  */
 public class GestionTablas {
 
@@ -30,6 +29,11 @@ public class GestionTablas {
     private static DefaultTableModel modeloTablaRealiza1;
     private static DefaultTableModel modeloTablaRealiza2;
 
+    /**
+     * Inicializa los modelos de las tablas de inscripciones (inscritas y disponibles) 
+     * configurándolas como no editables.
+     * * @param vInscripcionesPanel Panel de vista que contiene las tablas de inscripciones.
+     */
     public static void inicializarTablaRealiza(Vista.InscripcionesPanel vInscripcionesPanel) {
         modeloTablaRealiza1 = new DefaultTableModel(new Object[]{"Actividades Inscritas"}, 0) {
             @Override
@@ -50,6 +54,9 @@ public class GestionTablas {
 
     }
 
+    /**
+     * Vacía el contenido de las dos tablas del panel de inscripciones.
+     */
     public static void vaciarTablasInscripciones() {
         if (modeloTablaRealiza1 != null) {
             modeloTablaRealiza1.setRowCount(0);
@@ -59,6 +66,10 @@ public class GestionTablas {
         }
     }
 
+    /**
+     * Rellena la tabla de actividades inscritas con una lista de cadenas.
+     * @param actividades Lista de nombres o IDs de actividades en las que el socio está inscrito.
+     */
     public static void rellenarTablaRealiza1(List<String> actividades) {
         int i = 0;
         Object[] ob = new Object[1];
@@ -71,6 +82,10 @@ public class GestionTablas {
         System.out.println("Tabla1 rellenada");
     }
 
+    /**
+     * Rellena la tabla de actividades disponibles con una lista de cadenas.
+     * @param actividades Lista de nombres o IDs de actividades disponibles para el socio.
+     */
     public static void rellenarTablaRealiza2(List<String> actividades) {
         int i = 0;
         Object[] ob = new Object[1];
@@ -83,6 +98,10 @@ public class GestionTablas {
         System.out.println("Tabla1 rellenada");
     }
 
+    /**
+     * Configura el aspecto visual de la tabla de actividades inscritas.
+     * @param vInscripcionesPanel Referencia a la vista para acceder al componente JTable.
+     */
     public static void dibujarTablaRealiza1(Vista.InscripcionesPanel vInscripcionesPanel) {
         JTable t = vInscripcionesPanel.tabla1;
         t.setFillsViewportHeight(true);
@@ -94,6 +113,10 @@ public class GestionTablas {
         t.setAutoCreateRowSorter(true);
     }
 
+    /**
+     * Configura el aspecto visual de la tabla de actividades disponibles.
+     * @param vInscripcionesPane Referencia a la vista para acceder al componente JTable.
+     */
     public static void dibujarTablaRealiza2(Vista.InscripcionesPanel vInscripcionesPane) {
         JTable t = vInscripcionesPane.tabla2;
         t.setFillsViewportHeight(true);
@@ -105,6 +128,10 @@ public class GestionTablas {
         t.setAutoCreateRowSorter(true);
     }
 
+    /**
+     * Inicializa el modelo de la tabla de monitores como no editable.
+     * @param vMonitor Panel de vista que contiene la tabla de monitores.
+     */
     public static void inicializarTablaMonitor(Vista.MonitorPanel vMonitor) {
         modeloTablaMonitores = new DefaultTableModel() {
             @Override
@@ -118,6 +145,11 @@ public class GestionTablas {
 
     }
 
+    /**
+     * Define las columnas y el formato visual de la tabla de monitores, 
+     * incluyendo la configuración de anchuras específicas para cada columna.
+     * * @param vMonitor Referencia al panel de monitores.
+     */
     public static void dibujarTablaMonitores(MonitorPanel vMonitor) {
         String[] columnas = {"Codigo", "Nombre", "DNI", "Teléfono", "Correo", "Fecha Incorporación", "Nick"};
         modeloTablaMonitores.setColumnIdentifiers(columnas);
@@ -143,6 +175,10 @@ public class GestionTablas {
 
     }
 
+    /**
+     * Rellena la tabla de monitores con los datos de una lista de objetos Monitor.
+     * @param monitores Lista de objetos Monitor provenientes de la base de datos.
+     */
     public static void rellenarTablaMonitores(List<Monitor> monitores) {
         int i = 0;
         Object[] fila = new Object[7];
@@ -161,11 +197,18 @@ public class GestionTablas {
         System.out.println("Tabla rellenada");
     }
 
+    /**
+     * Elimina todas las filas de la tabla de monitores.
+     */
     public static void vaciarTablaMonitores() {
         modeloTablaMonitores.setRowCount(0);
         System.out.println("Tabla vaciada");
     }
 
+    /**
+     * Inicializa el modelo de la tabla de socios como no editable.
+     * @param vSocio Panel de vista que contiene la tabla de socios.
+     */
     public static void inicializarTablaSocio(Vista.SocioPanel vSocio) {
         modeloTablaSocios = new DefaultTableModel() {
             @Override
@@ -178,6 +221,11 @@ public class GestionTablas {
 
     }
 
+    /**
+     * Define las columnas y el formato visual de la tabla de socios,
+     * aplicando anchos de columna predefinidos.
+     * * @param vSocio Referencia al panel de socios.
+     */
     public static void dibujarTablaSocio(SocioPanel vSocio) {
         String[] columnas = {"Codigo", "Nombre", "DNI", "Fecha de Nacimiento", "Teléfono", "Correo", "Fecha de Alta", "Cat"};
         modeloTablaSocios.setColumnIdentifiers(columnas);
@@ -202,6 +250,10 @@ public class GestionTablas {
         }
     }
 
+    /**
+     * Rellena la tabla de socios con los datos de una lista de objetos Socio.
+     * @param socios Lista de objetos Socio provenientes de la base de datos.
+     */
     public static void rellenarTablaSocio(List<Socio> socios) {
         Object[] fila = new Object[8];
         for (Modelo.Socio socio : socios) {
@@ -218,11 +270,18 @@ public class GestionTablas {
         System.out.println("Tabla rellenada");
     }
 
+    /**
+     * Elimina todas las filas de la tabla de socios.
+     */
     public static void vaciarTablaSocio() {
         modeloTablaSocios.setRowCount(0);
         System.out.println("Tabla vaciada");
     }
 
+    /**
+     * Inicializa el modelo de la tabla de actividades como no editable.
+     * @param vActividad Panel de vista que contiene la tabla de actividades.
+     */
     public static void inicializarTablaActividad(Vista.ActividadesPanel vActividad) {
         modeloTablaActividad = new DefaultTableModel() {
             @Override
@@ -235,6 +294,11 @@ public class GestionTablas {
 
     }
 
+    /**
+     * Define las columnas y el formato visual de la tabla de actividades,
+     * estableciendo anchos mínimos y preferidos para cada campo.
+     * * @param vActividad Referencia al panel de actividades.
+     */
     public static void dibujarTablaActividad(ActividadesPanel vActividad) {
         String[] columnas = {"Código", "Nombre", "Día", "Hora", "Descripción", "Precio", "Monitor Responsable"};
         modeloTablaActividad.setColumnIdentifiers(columnas);
@@ -259,6 +323,12 @@ public class GestionTablas {
         }
     }
 
+    /**
+     * Rellena la tabla de actividades con datos formateados. 
+     * A diferencia de otras tablas, esta recibe un array de objetos debido a la unión 
+     * realizada en la consulta SQL para mostrar nombres de monitores.
+     * * @param actividades Lista de arrays de objetos conteniendo los datos de la actividad.
+     */
     public static void rellenarTablaActividad(List<Object[]> actividades) {
         Object[] fila = new Object[7];
         for (Object[] actividad : actividades) {
@@ -274,6 +344,9 @@ public class GestionTablas {
         System.out.println("Tabla rellenada");
     }
 
+    /**
+     * Elimina todas las filas de la tabla de actividades.
+     */
     public static void vaciarTablaActividad() {
         modeloTablaActividad.setRowCount(0);
         System.out.println("Tabla vaciada");

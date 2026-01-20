@@ -16,19 +16,18 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 /**
- *
- * @author rubco
+ * Controlador para la gestión de inscripciones de socios en actividades.
+ * Administra la lógica de alta y baja de socios en actividades, así como la 
+ * actualización de las tablas de actividades inscritas y disponibles.
+ * * @author rubco
  */
 public class ControladorInscripciones {
 
@@ -38,6 +37,13 @@ public class ControladorInscripciones {
     private SessionFactory sessionFactory;
     private VistaPrincipal vPrincipal;
 
+    /**
+     * Constructor del controlador de inscripciones.
+     * Configura la vista inicial, inicializa las tablas, carga la lista de socios
+     * y registra todos los manejadores de eventos necesarios.
+     * * @param sessionFactory Factoría de sesiones de Hibernate para el acceso a datos.
+     * @param vPrincipal Referencia a la ventana principal de la aplicación.
+     */
     public ControladorInscripciones(SessionFactory sessionFactory, VistaPrincipal vPrincipal) {
         this.vPanel = new InscripcionesPanel();
         this.sessionFactory = sessionFactory;
@@ -70,6 +76,10 @@ public class ControladorInscripciones {
             Vista.VistaMensajes.error("Error al cargar socios: " + e.getMessage(), vPrincipal);
         }
 
+        /**
+         * Listener para el cambio de selección en el combo de socios.
+         * Refresca las tablas de inscripciones según el socio seleccionado.
+         */
         vPanel.sociosCombo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -78,6 +88,10 @@ public class ControladorInscripciones {
 
         });
 
+        /**
+         * Listener de selección para la tabla de actividades inscritas.
+         * Habilita o deshabilita el botón de baja según haya una fila seleccionada.
+         */
         vPanel.tabla1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -94,6 +108,10 @@ public class ControladorInscripciones {
 
         });
 
+        /**
+         * Listener de selección para la tabla de actividades disponibles.
+         * Habilita o deshabilita el botón de alta según haya una fila seleccionada.
+         */
         vPanel.tabla2.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -110,6 +128,10 @@ public class ControladorInscripciones {
 
         });
 
+        /**
+         * Listener para el botón de baja. 
+         * Elimina la relación entre el socio seleccionado y la actividad de la tabla 1.
+         */
         vPanel.bajaBoton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -144,6 +166,10 @@ public class ControladorInscripciones {
 
         });
 
+        /**
+         * Listener para el botón de alta.
+         * Crea la relación entre el socio seleccionado y la actividad de la tabla 2.
+         */
         vPanel.altaBoton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -187,10 +213,19 @@ public class ControladorInscripciones {
 
     }
 
+    /**
+     * Controla la visibilidad del panel de inscripciones en la interfaz principal.
+     * @param mostrar true para visualizar el panel, false para ocultarlo.
+     */
     public void muestraPanel(boolean mostrar) {
         vPanel.setVisible(mostrar);
     }
 
+    /**
+     * Refresca el contenido de las tablas del panel. 
+     * Clasifica las actividades totales en dos listas (inscritas y disponibles) 
+     * basándose en la relación N:M del socio seleccionado en el combo.
+     */
     public void inicializaPanel() {
         // 1. Limpiar las tablas para que no se acumulen datos
         GestionTablas.vaciarTablasInscripciones();

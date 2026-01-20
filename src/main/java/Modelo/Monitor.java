@@ -86,6 +86,16 @@ public class Monitor implements Serializable {
         this.fechaEntrada = fechaEntrada;
         this.nick = nick;
     }
+    
+    public Monitor(String codMonitor, String nombre, String dni, String telefono, String correo, String fechaEntrada) {
+        this.codMonitor = codMonitor;
+        this.nombre = nombre;
+        this.dni = dni;
+        this.telefono = telefono;
+        this.correo = correo;
+        this.fechaEntrada = fechaEntrada;
+        this.nick = "";
+    }
 
     public Monitor(String codMonitor, String nombre, String dni, String telefono, String correo, String fechaEntrada, String nick, Set<Actividad> actividadSet) {
         this.codMonitor = codMonitor;

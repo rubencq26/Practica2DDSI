@@ -36,8 +36,8 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
-        inicioMenu = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        noInicio = new javax.swing.JMenu();
+        inicioMenu = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         monitorMenu = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
@@ -53,19 +53,20 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1500, 600));
+        setSize(new java.awt.Dimension(1500, 600));
 
-        inicioMenu.setText("Inicio");
+        noInicio.setText("Inicio");
 
-        jMenuItem2.setText("Ir a Inicio");
-        jMenuItem2.setActionCommand("InicioMenu");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        inicioMenu.setText("Ir a Inicio");
+        inicioMenu.setActionCommand("InicioMenu");
+        inicioMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                inicioMenuActionPerformed(evt);
             }
         });
-        inicioMenu.add(jMenuItem2);
+        noInicio.add(inicioMenu);
 
-        jMenuBar1.add(inicioMenu);
+        jMenuBar1.add(noInicio);
 
         jMenu2.setText("Monitores");
 
@@ -122,11 +123,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 1100, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 277, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
 
         pack();
@@ -136,9 +137,9 @@ public class VistaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_monitorMenuActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void inicioMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioMenuActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_inicioMenuActionPerformed
 
     private void salirMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirMenuActionPerformed
         // TODO add your handling code here:
@@ -147,7 +148,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JMenuItem actividadMenu;
-    public javax.swing.JMenu inicioMenu;
+    public javax.swing.JMenuItem inicioMenu;
     public javax.swing.JMenuItem inscripcionesMenu;
     private javax.swing.JMenu jMenu1;
     public javax.swing.JMenu jMenu2;
@@ -156,8 +157,8 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     public javax.swing.JMenuItem monitorMenu;
+    public javax.swing.JMenu noInicio;
     public javax.swing.JMenuItem salirMenu;
     public javax.swing.JMenuItem socioMenu;
     // End of variables declaration//GEN-END:variables

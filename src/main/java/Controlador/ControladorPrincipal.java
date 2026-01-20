@@ -4,32 +4,18 @@
  */
 package Controlador;
 
-import Modelo.Actividad;
-import Modelo.ActividadDAO;
-import Modelo.Monitor;
-import Modelo.MonitorDAO;
-import Modelo.Socio;
-import Modelo.SocioDAO;
-import Utilidades.GestionTablas;
-import Vista.ActividadesPanel;
 import Vista.InicioPanel;
-import Vista.MonitorPanel;
-import Vista.SocioPanel;
-import Vista.VistaMensajes;
 import Vista.VistaPrincipal;
-import config.HibernateUtil;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.Scanner;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
 /**
- *
- * @author rubco
+ * Controlador central de la aplicación que gestiona la navegación entre los diferentes módulos.
+ * Implementa el patrón Mediador para coordinar el intercambio de paneles (Monitores, Socios, 
+ * Actividades e Inscripciones) dentro de la ventana principal.
+ * * @author rubco
  */
 public class ControladorPrincipal implements ActionListener {
 
@@ -41,6 +27,12 @@ public class ControladorPrincipal implements ActionListener {
     private final ControladorMonitor cMonitor;
     private final ControladorInscripciones cInscripciones;
 
+    /**
+     * Inicializa el controlador principal y todos los subcontroladores de la aplicación.
+     * Configura el diseño de la ventana principal mediante un CardLayout y establece 
+     * el panel de inicio por defecto.
+     * * @param sessionFactory Factoría de sesiones de Hibernate compartida por todos los controladores.
+     */
     public ControladorPrincipal(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
         vPrincipal = new VistaPrincipal();
@@ -60,6 +52,9 @@ public class ControladorPrincipal implements ActionListener {
 
     }
 
+    /**
+     * Registra los eventos de los elementos del menú de la vista principal.
+     */
     private void addListeners() {
         vPrincipal.inicioMenu.addActionListener(this);
         vPrincipal.monitorMenu.addActionListener(this);
@@ -69,6 +64,10 @@ public class ControladorPrincipal implements ActionListener {
         vPrincipal.inscripcionesMenu.addActionListener(this);
     }
 
+    /**
+     * Procesa las acciones del menú principal para alternar entre los diferentes paneles de gestión.
+     * * @param e El evento de acción capturado del menú.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -94,11 +93,16 @@ public class ControladorPrincipal implements ActionListener {
         }
     }
 
+    /**
+     * Gestiona la visibilidad de los paneles, asegurando que solo uno sea visible a la vez.
+     * * @param panel Nombre del panel o módulo que se desea mostrar.
+     */
     private void muestraPanel(String panel) {
         vInicio.setVisible(false);
         cMonitor.mostrarPanel(false);
         cSocio.mostrarPanel(false);
         cActividad.mostrarPanel(false);
+        cInscripciones.muestraPanel(false);
 
         switch (panel) {
             case "Inicio":

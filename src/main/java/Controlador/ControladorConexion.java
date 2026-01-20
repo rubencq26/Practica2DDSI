@@ -13,8 +13,9 @@ import javax.swing.JOptionPane;
 import org.hibernate.SessionFactory;
 
 /**
- *
- * @author rubco
+ * Controlador encargado de gestionar la ventana de login y la conexión inicial a Hibernate.
+ * Administra la captura de credenciales del usuario y la instanciación del SessionFactory.
+ * * @author rubco
  */
 public class ControladorConexion implements ActionListener{
 
@@ -24,6 +25,10 @@ public class ControladorConexion implements ActionListener{
     private String pass;
 
 
+    /**
+     * Constructor del controlador de conexión.
+     * Inicializa la vista de login, configura sus propiedades visuales y registra los listeners.
+     */
     public ControladorConexion() {
         vConexion = new VistaConexion();
         addListeners();
@@ -35,11 +40,23 @@ public class ControladorConexion implements ActionListener{
     }
     
     
+    /**
+     * Registra los manejadores de eventos para los botones de la vista de conexión.
+     */
     private void addListeners(){
         vConexion.entrarButton.addActionListener(this);
         vConexion.salirButton.addActionListener(this);
     }
 
+    /**
+     * Gestiona las acciones realizadas sobre la interfaz de conexión.
+     * <p>
+     * - "EntrarAplicacion": Intenta construir el SessionFactory con las credenciales proporcionadas.
+     * Si tiene éxito, cierra la vista y lanza el ControladorPrincipal.
+     * <p>
+     * - "SalirAplicacion": Cierra la ventana y finaliza la ejecución del programa.
+     * * @param e El evento de acción capturado.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch(e.getActionCommand()){

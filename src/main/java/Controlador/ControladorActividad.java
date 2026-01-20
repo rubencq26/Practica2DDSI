@@ -8,35 +8,29 @@ import Modelo.Actividad;
 import Modelo.ActividadDAO;
 import Modelo.Monitor;
 import Modelo.MonitorDAO;
-import Modelo.Socio;
-import Modelo.SocioDAO;
 import Utilidades.GestionTablas;
 import Vista.ActividadesPanel;
 import Vista.ActualizarActividadDialog;
-import Vista.ActualizarMonitorDialog;
 import Vista.EstadisticasDialog;
 import Vista.InsertarActividadDialog;
-import Vista.InsertarSocioDialog;
 import Vista.VistaMensajes;
 import Vista.VistaPrincipal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 /**
+ * Clase controladora para la gestión de Actividades. Maneja la interacción
+ * entre la vista ActividadesPanel y el modelo ActividadDAO, gestionando eventos
+ * de inserción, borrado, actualización y estadísticas.
  *
- * @author rubco
+ * * @author rubco
  */
 public class ControladorActividad implements ActionListener {
 
@@ -48,6 +42,13 @@ public class ControladorActividad implements ActionListener {
     private List<Monitor> lMonitor;
     private ActualizarActividadDialog acDialog;
 
+    /**
+     * Constructor del controlador. Inicializa la vista, configura la tabla y
+     * registra los escuchadores de eventos para los botones principales.
+     *
+     * * @param sessionFactory Factoría de sesiones de Hibernate.
+     * @param vPrincipal Ventana principal de la aplicación.
+     */
     public ControladorActividad(SessionFactory sessionFactory, VistaPrincipal vPrincipal) {
         this.sessionFactory = sessionFactory;
         vActividad = new ActividadesPanel();
@@ -59,6 +60,11 @@ public class ControladorActividad implements ActionListener {
         GestionTablas.inicializarTablaActividad(vActividad);
         dibujaRellenaTablaActividad();
 
+        /**
+         * Listener para el botón de nueva actividad. Calcula el siguiente
+         * código correlativo y abre el diálogo de inserción cargando los
+         * monitores disponibles.
+         */
         vActividad.nuevaActividad.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -116,6 +122,10 @@ public class ControladorActividad implements ActionListener {
             }
         });
 
+        /**
+         * Listener para el botón de baja. Solicita confirmación y elimina la
+         * actividad seleccionada en la tabla.
+         */
         vActividad.bajaActividad.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -158,6 +168,10 @@ public class ControladorActividad implements ActionListener {
 
         });
 
+        /**
+         * Listener para el botón de actualización. Carga los datos de la
+         * actividad seleccionada en un diálogo para su edición.
+         */
         vActividad.actualizacionActividad.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -236,6 +250,10 @@ public class ControladorActividad implements ActionListener {
 
         });
 
+        /**
+         * Listener para filtrar actividades por día según la selección del
+         * ComboBox.
+         */
         vActividad.filtrado.addActionListener(new ActionListener() {
             List<Object[]> lFiltrada;
 
@@ -257,50 +275,58 @@ public class ControladorActividad implements ActionListener {
                         session.close();
                     }
                 }
-                
-                if(vActividad.filtradoCombo.getSelectedIndex() == 0){
+
+                if (vActividad.filtradoCombo.getSelectedIndex() == 0) {
                     dibujaRellenaTablaActividad();
-                }else{
+                } else {
                     String dia = (String) vActividad.filtradoCombo.getSelectedItem();
-                    
+
                     lFiltrada.removeIf(obj -> !obj[2].equals(dia));
                     GestionTablas.vaciarTablaActividad();
                     GestionTablas.rellenarTablaActividad(lFiltrada);
                 }
-                
+
             }
 
         });
-        
-        vActividad.estadisticas.addActionListener(new ActionListener(){
+
+        /**
+         * Listener para mostrar estadísticas de la actividad seleccionada
+         * invocando un procedimiento almacenado.
+         */
+        vActividad.estadisticas.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(vActividad.tablaActividad.getSelectedRow() == -1){
-                    Vista.VistaMensajes.error("Selecciona una actividad de la tabla apra ver las estadísticas", vPrincipal);
-                }else{
+                if (vActividad.tablaActividad.getSelectedRow() == -1) {
+                    Vista.VistaMensajes.error("Selecciona una actividad de la tabla para ver las estadísticas", vPrincipal);
+                } else {
                     String idActividad = (String) vActividad.tablaActividad.getValueAt(vActividad.tablaActividad.getSelectedRow(), 0);
                     List<Object> resultados = ActividadDAO.estadisticasActividad(sessionFactory, idActividad);
-                    
+
                     EstadisticasDialog est = new EstadisticasDialog(vPrincipal, true);
                     est.nombreActividad.setText(idActividad + " - " + vActividad.tablaActividad.getValueAt(vActividad.tablaActividad.getSelectedRow(), 1));
                     Integer nSocios = (Integer) resultados.get(0);
                     Double edadMedia = (Double) resultados.get(1);
                     Character categoria = (Character) resultados.get(2);
                     Double ingresos = (Double) resultados.get(3);
-                    
-                    est.nSocios.setText(nSocios+ "");
+
+                    est.nSocios.setText(nSocios + "");
                     est.edadMedia.setText(edadMedia + "");
                     est.categoria.setText(categoria + "");
                     est.ingresos.setText(ingresos + "");
-                    
+
                     est.setVisible(true);
                 }
             }
-            
+
         });
 
     }
 
+    /**
+     * Refresca el dibujo y el contenido de la tabla de actividades consultando
+     * los datos actualizados al DAO.
+     */
     private void dibujaRellenaTablaActividad() {
         try {
             GestionTablas.dibujarTablaActividad(vActividad);
@@ -326,10 +352,21 @@ public class ControladorActividad implements ActionListener {
         }
     }
 
+    /**
+     * Cambia la visibilidad del panel de actividades.
+     *
+     * @param mostrar true para mostrar el panel, false para ocultarlo.
+     */
     public void mostrarPanel(boolean mostrar) {
         vActividad.setVisible(mostrar);
     }
 
+    /**
+     * Sobrescribe el método actionPerformed para gestionar las acciones de
+     * inserción y actualización provenientes de los diálogos.
+     *
+     * * @param e El evento de acción.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -360,11 +397,23 @@ public class ControladorActividad implements ActionListener {
                         // Obtenemos la lista real de monitores para sacar el objeto
                         List<Monitor> lMonitores = MonitorDAO.listarMonitores(session);
                         Actividad actividad;
-
+                        List<Actividad> lActi = ActividadDAO.listarActividadesA(session);
                         if (lMonitores.isEmpty() || monitIndex == -1) {
                             actividad = new Actividad(codigo, nombre, dia, h, desc, p);
                         } else {
                             Monitor monitorElegido = lMonitores.get(monitIndex);
+
+                            for (Actividad act : lActi) {
+
+                                if (act.getMonitorResponsable() != null
+                                        && act.getMonitorResponsable().getCodMonitor().equals(monitorElegido.getCodMonitor())
+                                        && act.getDia().equals(dia)
+                                        && act.getHora() == h) {
+
+                                    throw new Exception("El monitor ya esta asignado para otra actividad el mismo dia y misma hora");
+                                }
+                            }
+
                             actividad = new Actividad(codigo, nombre, dia, h, desc, p, monitorElegido);
                         }
 
@@ -437,6 +486,21 @@ public class ControladorActividad implements ActionListener {
 
                         } else {
                             Monitor monitorElegido = lMonitores.get(monitIndex);
+
+                            for (Actividad act : lActi) {
+                                if (act.getIdActividad().equals(codigo)) {
+                                    continue;
+                                }
+
+                                if (act.getMonitorResponsable() != null
+                                        && act.getMonitorResponsable().getCodMonitor().equals(monitorElegido.getCodMonitor())
+                                        && act.getDia().equals(dia)
+                                        && act.getHora() == h) {
+
+                                    throw new Exception("El monitor ya esta asignado para otra actividad el mismo dia y misma hora");
+                                }
+                            }
+
                             actividad.setMonitorResponsable(monitorElegido);
                         }
 
