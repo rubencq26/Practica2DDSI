@@ -161,6 +161,10 @@ public class ControladorInscripciones {
                         session.close();
                     }
                 }
+                
+                if(vPanel.tabla1.getRowCount() == 0){
+                    vPanel.bajaBoton.setEnabled(false);
+                }
 
             }
 
@@ -207,6 +211,10 @@ public class ControladorInscripciones {
                     if (session != null && session.isOpen()) {
                         session.close();
                     }
+                }
+                
+                if(vPanel.tabla2.getRowCount() == 0){
+                    vPanel.altaBoton.setEnabled(false);
                 }
             }
         });
